@@ -1,0 +1,25 @@
+
+@charset "utf-8";
+
+body,td,th { font-family: "Trebuchet MS"; font-size: 15px; color: #BCBCBC; }
+body { background-color: #BCBCBC; margin: 0 0 0; } 
+a:link { color: #464646; text-decoration: none; }
+a:hover { text-decoration: none; color: #fff; }
+#container { height:762px; background-color:#fff; float:left; margin-right:20px; margin-bottom:0; margin-left:0px; padding:3px 0 3px 0; position: absolute; z-index: 0; }
+#container img { margin-left:3px; }
+#container ul li { float:left; height:720px; margin-right:0px; }
+#arrows { position:fixed; top:768px; left:20px; width:90px; height:30px; cursor:pointer; }
+#arrows ul { list-style:none; margin:5px; padding:0; }
+#arrows ul li { display:inline; width:40px; height:30px; margin:0; padding:0; }
+#arrows ul li a { margin-right:5px; float:left; display:block; width:40px; height:30px; overflow:hidden; cursor:pointer; font-size:50em; text-indent:-9000px; }
+#arrows ul #left a { background:transparent url(../../assets/arr-left.gif) no-repeat; }
+#arrows ul #right a { background:transparent url(../../assets/arr-right.gif) no-repeat; }
+#back { height:36px; width:120px; display:block; outline:0; z-index:1; margin-top:120px; position:absolute; background:url('../../assets/back.gif') no-repeat; font-size:32px; }
+#back:hover { background-position:0 -36px; padding-left:40px; }
+#back00 { width:120px; height:500px; }
+#footer { height:40px; width:1200px; padding-left:20px; margin-top:560px; font-size:10px; position:absolute; margin-left:0; left:0; text-transform:uppercase; }
+#footer img { float: right; margin-right: 700px; }
+#footer a img { border: none; }
+#qTip { position:absolute; display:none; font-size:13px; color:#fff; z-index:1000; background:url('../../assets/qTip.png') repeat; padding:10px 15px; }
+a:visited,a:active { text-decoration:none; color:#333; }
+#menu ul,#container ul { list-style-type:none; display:inline; padding:0; }

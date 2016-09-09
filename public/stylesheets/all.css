@@ -1,4 +1,3 @@
-
 @charset "utf-8";
 
 body,td,th { font-family: "Trebuchet MS"; font-size: 15px; color: #BCBCBC; }
@@ -22,4 +21,5 @@ a:hover { text-decoration: none; color: #fff; }
 #footer a img { border: none; }
 #qTip { position:absolute; display:none; font-size:13px; color:#fff; z-index:1000; background:url('../../assets/qTip.png') repeat; padding:10px 15px; }
 a:visited,a:active { text-decoration:none; color:#333; }
-#menu ul,#container ul { list-style-type:none; display:inline; padding:0; }
+#menu ul,#container ul { list-style-type:none; display:inline; padding:0; }.container {
+}

@@ -23,3 +23,9 @@ a:hover { text-decoration: none; color: #fff; }
 a:visited,a:active { text-decoration:none; color:#333; }
 #menu ul,#container ul { list-style-type:none; display:inline; padding:0; }.container {
 }
+.grid-item { width: 200px; }
+.grid-item--width2 { width: 400px; }
+.grid-item--gigante {
+  width: 320px;
+  height: 360px;
+}

@@ -1,4 +1,5 @@
-// JavaScript Document/*  Prototype JavaScript framework, version 1.6.0.2
+// JavaScript Document
+/*  Prototype JavaScript framework, version 1.6.0.2
  *  (c) 2005-2008 Sam Stephenson
  *
  *  Prototype is freely distributable under the terms of an MIT-style license.

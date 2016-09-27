@@ -11,20 +11,101 @@ version September 1, 2016
 <title>Curation Arena Prototype v1.0 - Mendel Broekhuijsen</title>
 <meta http-equiv="content-language" content="en" />
 <meta name="description" content="Curation Arena Prototype v1.0" />
+<!--for iPad full screen mode. visit https://developer.apple.com/library/content/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black"> <!-- content= If set to "black-translucent", the web content is displayed on the entire screen, partially obscured by the status bar-->
+<meta name="viewport" content="width=device-width, user-scalable=no"> <!--initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,-->
+<!-- provide the splash screens for iPhone 5 and previous NBNBNBNB Does not work in iOS9 anymore-->
+<!--<link href="assets/splashs/splash_1096.png" rel="apple-touch-startup-image" media="(device-height: 568px)">
+<link href="images/splash_iphone_2x.png" rel="apple-touch-startup-image" sizes="640x960" media="(device-height: 480px)">-->
+
+
 <!--Thanks to Alex Flueras - http://www.flueras.com, I kind of took elements from his website-->
 
-<link rel="shortcut icon" href="favicon.ico" />
-<link href="stylesheets/all.css" rel="stylesheet" type="text/css" media="screen" />
-<script type="text/javascript" src="javascripts/hscroll.js"></script>
-<script type="text/javascript" src="javascripts/prototype.js"></script>
-<script type="text/javascript" src="javascripts/prototip.js"></script>
+<link rel="shortcut icon" href="./images/favicon.ico" />
+<link href="stylesheets/test.css" rel="stylesheet" type="text/css" media="screen" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="javascripts/web-app-links.js"></script>
+
+
+<script type="text/javascript" src="javascripts/get-photo-URL.js"></script>
+
+<!--Om fotos te laden-->
+<script type="text/javascript" src="javascripts/imagesloaded.pkgd.js"></script>
+
 <link href="stylesheets/prototip.css" rel="stylesheet" type="text/css" media="screen" />
 
 </head>
 
 <body>
+<div class="grid">
+  <div class="grid-sizer"></div>
+  <div class="grid-item">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/orange-tree.jpg" />
+  </div>
+  <div class="grid-item">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/submerged.jpg" />
+  </div>
+  <div class="grid-item">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/look-out.jpg" />
+  </div>
+  <div class="grid-item">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/one-world-trade.jpg" />
+  </div>
+  <div class="grid-item">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/drizzle.jpg" />
+  </div>
+  <div class="grid-item">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/cat-nose.jpg" />
+  </div>
+  <div class="grid-item">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/contrail.jpg" />
+  </div>
+  <div class="grid-item">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/golden-hour.jpg" />
+  </div>
+  <div class="grid-item">
+    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/82/flight-formation.jpg" />
+  </div>
+</div>
 
-<div id="container" style="width:15000px;">
+<!-- voorbeeld voor de klik event listener
+<div class="grid">
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--width2 grid-item--height2"></div>
+  <div class="grid-item grid-item--height3"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item grid-item--width3"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item grid-item--width2 grid-item--height3"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--width2 grid-item--height2"></div>
+  <div class="grid-item grid-item--width2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height3"></div>
+  <div class="grid-item grid-item--height2"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item grid-item--height2"></div>
+</div>
+-->
+
+</body>
+
+
+<!-- script for photo collaging effect-->
+<script type="text/javascript" src="javascripts/masonry.pkgd.js"></script>
+<script type="text/javascript" src="javascripts/curationarena-grid.js"></script>
+
+<!--<div id="container" style="width:15000px;">
     <ul>
       <li><a href="multi-user-screen_landing.html" id="a1"><img src="images/Login-A.png" height="300" alt=""/></a></li>
       <li><a href="http://mendeldesign.nl" id="a2"><img src="images/photos-A/02.png" height="762" alt=""/></a></li>
@@ -44,6 +125,7 @@ version September 1, 2016
   </ul>
 
 </div>
+-->
 
 </body>
 </html>

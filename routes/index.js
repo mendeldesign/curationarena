@@ -7,3 +7,28 @@ router.get('/', function(req, res, next) {
 });
 
 module.exports = router;
+
+//[MJB] Added for access the io variable in your app.js, and even make it available to your routes by defining module.exports as a function which accepts io as a parameter.
+module.exports = function(io) {
+    var app = require('express');
+    var router = app.Router();
+
+    io.on('connection', function(socket) { 
+        //log when a user is connected
+        console.log('iPad connected');
+        
+        //when reveiving a message
+        socket.on('chat message', function(i,msg){
+          console.log('request ' + i +" "+ msg);
+
+          //broadcast the message to the other people
+          io.emit('chat message', i , msg);
+        });
+  		
+  		//log when a user is disconnected
+  		socket.on('disconnect', function(){
+    		//console.log('iPad disconnected');
+  		}); 
+    });
+    return router;
+}

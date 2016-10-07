@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Test USB folder selector</title>
+
+<!--Script includes
+    script(src='/javascripts/jQueryUI/jquery-ui.min.js')
+    script(src='/javascripts/bootstrap/js/bootstrap.min.js')
+    script(src="/javascripts/d3.v3.min.js")
+    
+    script(src='/javascripts/dropbox.min.js')
+    script(src='/javascripts/jquery.elevatezoom.js')
+    script(src='/javascripts/ripples.min.js')
+-->
+<script src='javascripts/timeline.js'></script>
+<script src='javascripts/dropbox.min.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src='javascripts/material.min.js'></script>
+
+<!--CSS includes -->
+
+<link rel='stylesheet', href='stylesheets/material.css', type="text/css">
+<link rel='stylesheet', href='stylesheets/material-fullpalette.css', type="text/css">
+<link rel='stylesheet', href='stylesheets/material-fullpalette.css', type="text/css">
+<link rel='stylesheet', href='stylesheets/style.css', type="text/css">
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700', rel='stylesheet', type='text/css'>
+
+</head>
+
+<body>
+
+<div>
+    <div id="previousgoogleFolder" class="abs small-button" onclick="console.log('back')"> << </div><br>
+    <h4 id="currentFolder" class="nobpad">USB Root folder</h4>
+</div>
+<div class="folderslist" back="false"></div>
+
+<!--start processing the photos in the folders that are selected-->
+<br><div class="abs small-button" onclick="console.log('GO!')">GO!</div>
+
+<script type="text/javascript">
+        var parentFolder;
+        var trackedFolder = false;
+        var onceOpenned = false;
+
+ $(document).ready(function() {
+            $.material.init();
+			
+           /* $.get("../api/checkDropboxConnection", function(data, status){
+                if (status == "success")
+                {
+                    if (data != "")
+                    {
+                        data = JSON.parse(data);
+                        showDropboxButton(data.display_name);*/
+                        getFolders('dropbox-response.json');
+                /*    }                    else
+                        hideDropboxButton();
+                }
+                else
+                {
+                    hideDropboxButton();
+                    console.log("Something went wrong: " + data );
+                }*/
+            });
+		
+//iets hier nog tussen?	
+
+		
+function getFolders(path){
+            $.get(path, function(folders){
+               console.log(folders.contents);
+			   
+			   if (folder =! "")
+               {
+                   if (path == "" || path == "/")
+                       $("#previousFolder").fadeOut();
+                   else
+                       $("#previousFolder").fadeIn();
+                   $("#currentPath").text(path);
+                   parentFolder = path.replace("/" + path.split('/')[path.split('/').length-1], '');
+                   visualizeFolder(folders);
+                   previousFolderPressed = false;
+               }
+            });
+        }
+        var previousFolderPressed = false;
+        $("#previousFolder").click(function(){
+            if (!previousFolderPressed)
+            {
+                previousFolderPressed = true;
+                moveOutFolder(parentFolder.split('/')[parentFolder.split('/').length-1]);
+                getFolders(parentFolder);
+            }
+
+        })
+
+        function visualizeFolder(folders){
+           if (folders)
+           {
+                //folders = JSON.parse(folders);
+                var folderExist = false;
+                var filesNumber = 0;
+                var filesAppendix = "";
+                if (folders.contents)
+                {
+                    $(".folderslist[back='false']").append("<p class='f-title'><span>Add</span> <span>Folder Items</span></p>");
+                    for (var i = 0; i <folders.contents.length; i++)
+                    {
+                        if (folders.contents[i].is_dir){
+                            folderExist = true;
+                            var foldername = folders.contents[i].path.match(/([^\/]*)\/*$/)[1];
+                            var folderId = folders.contents[i].path.replace(/\//g, '').replace(/ /g, "").replace(/'/g, "").replace(/./g, "") + i;
+                            
+                            console.log(foldername);
+
+                            $(".folderslist[back='false']").append("<div class='togglebutton togglebutton-material-blue-600 stpad'><label><input id='folderToggle" + folderId + "' type='checkbox' folderpath='" + folders.contents[i].path + "'></label><span class='glyphicon glyphicon-folder-close fd-icon' id='fdIcon" + folderId + "' active='false'></span>&nbsp;<span id='folderName" + folderId + "' class='foldername' folderpath='" + folders.contents[i].path + "'>" + foldername + "</span></div>");
+
+                            /*for (var j = 0; j < timeline.currentProject.trackedItems.length; j++)
+                            {
+                                if (timeline.currentProject.trackedItems[j].path == folders.contents[i].path){
+                                    $("#folderToggle" + folderId).prop("checked", true);
+                                    $("#fdIcon" + folderId).attr("active", true);
+                                    $("#fdIcon" + folderId).removeClass("glyphicon-folder-close");
+                                    $("#fdIcon" + folderId).addClass("glyphicon-folder-open");
+                                    break;
+                                }
+                                else if (timeline.currentProject.trackedItems[j].path.indexOf(folders.contents[i].path) === 0)
+                                {
+                                    $("#folderToggle" + folderId).prop("checked", true);
+                                    $("#folderToggle" + folderId).parents(".togglebutton").removeClass("togglebutton-material-green-600").addClass("togglebutton-material-yellow-600");
+                                    break;
+                                }
+                            }*/
+
+                            $("#folderToggle" + folderId).click(function(){
+                                updateTracker(this);
+                            });
+                            $("#folderName" + folderId).click(function(){
+                                navigateFolder(this);
+                            });
+                        }
+                        else {
+                            filesNumber++;
+                            if (filesNumber <=5)
+                            {
+                                var filename = folders.contents[i].path.match(/([^\/]*)\/*$/)[1];
+                                filesAppendix += "<p class='fileitem' type='" + filesNumber + "'><span class='glyphicon glyphicon-file fd-icon'></span>&nbsp;<span class='filename'>" + filename + "</span></p>";
+                            }
+                        }
+                    }
+                    $(".folderslist[back='false']").append(filesAppendix);
+                    if (trackedFolder)
+                    {
+                        $("#folderStatusTracked").show();
+                        $("#folderStatusNotTracked").hide();
+                    }
+                    else {
+                        $("#folderStatusTracked").hide();
+                        $("#folderStatusNotTracked").show();
+                    }
+                    $(".folderslist").attr("tracked", trackedFolder);
+                }
+ 
+                $.material.init();
+                $(".folders").fadeIn();
+           }
+        }
+		
+        $("#dropboxBtn").click(function(){
+            window.location.href = "/data/dropbox-auth";
+        })
+        $("#disconnect").click(function(){
+            $.ajax({
+                  url: "../api/disconnectDropbox",
+                  dataType: 'json',
+                  success: function(data) {
+                    hideDropboxButton();
+                  },
+                  fail: function(err){}
+            });
+        });
+
+        /*function updateTracker(checkbox){
+            var path = $(checkbox).attr("folderpath");
+            var name = path.match(/([^\/]*)\/*$/)[1];
+            if ($(checkbox).prop( "checked")){
+                $.post( "../api/addTrackedItem", { projectId: timeline.currentProject.projectId, name: name, path: path }, function(data){
+                    addTrackedItem(name, path);
+                });
+            }
+            else
+            {
+                $.post( "../api/removeTrackedItem", { projectId: timeline.currentProject.projectId, name: name, path: path }, function(data){
+                    removeTrackedItem(name, path);
+                });
+            }
+        }*/
+
+        function addTrackedItem(name, path){
+            timeline.currentProject.trackedItems.push({name: name, path: path});
+        }
+
+        function removeTrackedItem(name, path){
+            for (var i = 0; i <timeline.currentProject.trackedItems.length; i++)
+            {
+                if (timeline.currentProject.trackedItems[i].path == path && timeline.currentProject.trackedItems[i].name == name)
+                {
+                    timeline.currentProject.trackedItems.splice(i, 1);
+                    break;
+                }
+            }
+        }
+		
+		 function navigateFolder(item)
+        {
+            moveInFolder($(item));
+            console.log($(item).attr("folderpath"));
+            getFolders('dropbox-response.json'); //$(item).attr("folderpath"));
+        }
+
+        function moveInFolder(item){
+                var list = $(".folderslist[back='false']");
+                $(list).css("height", $(list).find("label").length*20 + "pt");
+                $(list).attr("back", true);
+                $(list).animate({marginLeft: "-200pt", opacity: 0}, function() {$(this).remove();})
+                $(".folders").append("<div class='folderslist' back='false'></div>");
+                $("#currentFolder").text($(item).text());
+                trackedFolder = false;
+                /*for (var j = 0; j < timeline.currentProject.trackedItems.length; j++)
+                {
+                    if (timeline.currentProject.trackedItems[j].path == $(item).attr("folderpath")){
+                        trackedFolder = true;
+                        break;
+                    }
+                }*/
+        }
+        function moveOutFolder(fdName){
+                var list = $(".folderslist[back='false']");
+                $(list).css("height", $(list).find("label").length*20 + "pt");
+                $(list).attr("back", true);
+                $(list).animate({marginLeft: "200pt", opacity: 0}, function() {$(this).remove();})
+                $(".folders").append("<div class='folderslist' back='false'></div>");
+                if (fdName == "")
+                    fdName = "Root folder";
+                $("#currentFolder").text(fdName);
+                trackedFolder = false;
+                /*for (var j = 0; j < timeline.currentProject.trackedItems.length; j++)
+                {
+                    if (timeline.currentProject.trackedItems[j].path == parentFolder){
+                        trackedFolder = true;
+                        break;
+                    }
+                }*/
+        }
+		
+
+</script>
+
+</body>
+</html>

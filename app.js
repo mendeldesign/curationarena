@@ -5,12 +5,20 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-var util = require('util');
+//[MJB]added f or socket.io. based on info found on http://stackoverflow.com/questions/24609991/using-socket-io-in-express-4-and-express-generators-bin-www
+var socket_io = require( "socket.io" );
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+//Express
 var app = express();
+
+// [MJB] Added for Socket.io
+var io           = socket_io();
+app.io           = io;
+
+var routes = require('./routes/index')(io);
 
 // view engine setup >> MJB: IN MY CASE NO VIEW ENGINE, JUST PLANE STATIC HTML
 //app.set('views', path.join(__dirname, 'views'));

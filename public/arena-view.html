@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+
+<!--SITE: DataArena-View.html
+	version October 7, 2016
+	Curation Arena Prototype
+	Created by Mendel Broekhuijsen
+
+	EXTERNAL JS: isotope.pkgd.js, masonry-horizontal.js, curationarena-Arena-grid.js, 
+	???imagesloaded.pkgd.js???
+
+	EXTERNAL CSS: horizontalTest.css-->
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="msvalidate.01" content="E79FAF828E0CA650F170B6C255B55EF0" />
+	<title>Arena-View | Curation Arena Prototype - Mendel Broekhuijsen</title>
+	<meta http-equiv="content-language" content="en" />
+	<meta name="description" content="Arena-View | Curation Arena Prototype - Mendel Broekhuijsen" />
+
+	<link rel="shortcut icon" href="./images/favicon.ico" />
+	<link href="stylesheets/horizontalTest.css" rel="stylesheet" type="text/css" media="screen" />
+
+	<!--script to render jquery / json-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+	<!--script to enable pre-loading of photos-->
+	<script type="text/javascript" src="javascripts/imagesloaded.pkgd.js"></script>
+
+</head>
+
+<!--Huge dimentions for the data arena screen-->
+<body style="height:1200px; width:10080px">
+
+	<!--The div that gets all the photos on the screen. 
+		The are appended using the curationarena-Arena-grid.js script-->
+	<div class="grid"></div>
+
+	<!-- script for photo collaging effect-->
+	<script type="text/javascript" src="javascripts/isotope.pkgd.js"></script>
+	<script type="text/javascript" src="javascripts/masonry-horizontal.js"></script>
+	  <!--script for sending the photo URL back and forth between ipad and arena screen-->
+  <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+	<!--script for adding the photos that are clicked from on the iPads-->
+	<script type="text/javascript" src="javascripts/curationarena-Arena-grid.js"></script>
+
+</body>
+</html>

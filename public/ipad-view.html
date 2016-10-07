@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr">
+
+<!--SITE iPAD VIEW
+version Oktober 7, 2016
+Created by Mendel Broekhuijsen-->
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="msvalidate.01" content="E79FAF828E0CA650F170B6C255B55EF0" />
+  <title>Curation Arena Prototype v1.0 - Mendel Broekhuijsen</title>
+  <meta http-equiv="content-language" content="en" />
+  <meta name="description" content="Curation Arena Prototype v1.0" />
+  <!--for iPad full screen mode. visit https://developer.apple.com/library/content/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black"> <!-- content= If set to "black-translucent", the web content is displayed on the entire screen, partially obscured by the status bar-->
+  <meta name="viewport" content="width=device-width, user-scalable=no"><!--, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0,-->
+  <!-- provide the splash screens for iPhone 5 and previous NBNBNBNB Does not work in iOS9 anymore-->
+<!--<link href="assets/splashs/splash_1096.png" rel="apple-touch-startup-image" media="(device-height: 568px)">
+  <link href="images/splash_iphone_2x.png" rel="apple-touch-startup-image" sizes="640x960" media="(device-height: 480px)">-->
+
+
+  <!--Thanks to Alex Flueras - http://www.flueras.com, I kind of took elements from his website-->
+
+  <link rel="shortcut icon" href="./images/favicon.ico" />
+  <link href="stylesheets/horizontalTest.css" rel="stylesheet" type="text/css" media="screen" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+  <!--to enable within the webapp linking to other pages-->
+  <script type="text/javascript" src="javascripts/web-app-links.js"></script>
+
+  <!--Om fotos te pre-laden-->
+  <script type="text/javascript" src="javascripts/imagesloaded.pkgd.js"></script>
+
+  <link href="stylesheets/prototip.css" rel="stylesheet" type="text/css" media="screen" />
+
+</head>
+
+<!--height iPad = 768px - 20px status bar. If statys bar= black-transparent, hieght = full 768px-->
+<body style="height:748px">
+  <div class="grid"></div>
+  
+  <!-- script for photo collaging effect-->
+  <script type="text/javascript" src="javascripts/isotope.pkgd.js"></script>
+  <script type="text/javascript" src="javascripts/masonry-horizontal.js"></script>
+  <!--script for sending the photo URL back and forth between ipad and arena screen-->
+  <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script type="text/javascript" src="javascripts/curationarena-grid.js"></script>
+
+
+
+</body>
+</html>

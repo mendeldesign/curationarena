@@ -1,0 +1,85 @@
+* { box-sizing: border-box; }
+
+/* inherit height from window */
+html, body { height: 100%; }
+
+body { background-color: black; margin: 0 0 0 0; }
+
+
+/* ---- grid ---- */
+
+.grid {
+  background: black;
+  height: 100%; /* inherit height from body */
+}
+
+/* clear fix */
+.grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/* ---- .grid-item ---- */
+
+/* ----landscape small ---*/
+.grid-item {
+  float: left;
+  width: 332px;
+  height: 249px;
+  /*background: #E6E6E6;*/
+  border: 1px solid #FFF;
+  overflow: hidden;
+  margin: 0px;
+}
+
+.grid-item img {
+  display:block;
+  vertical-align: middle;
+  max-width: 100%;
+  max-height: none;
+}
+
+/* ----landscape big ---*/
+.grid-item--land-big { 
+	width: 664px;
+ 	height: 498px; 
+}
+
+/* ----portrait small ---*/
+.grid-item--port-small { 
+	width: 166px;
+	height: 249px;
+}
+.grid-item--port-small img {max-width: none; max-height: 100%;}
+
+/* ----portrait big ---*/
+.grid-item--port-big {
+	width: 332px;
+	height: 498px;
+}
+.grid-item--port-big img {max-width: none; max-height: 100%;}
+
+/* ----panorama ---*/
+.grid-item--pano {
+	width: 664px;
+	height: 249px;
+}
+.grid-item--pano img {max-width: none; max-height: 100%;}
+
+.grid-item--port-pano {
+	width: 332px;
+	height: 747px;
+}
+.grid-item--port-pano img {max-height: 100%; max-width: none;}
+
+/*#portrait{ max-height:100% }
+#landscape{ max-width:100% }
+*/
+
+/*when selected*/
+.item--selected{
+	border: 15px solid #FFF;	
+	/*opacity: 0.4;*/
+	}
+

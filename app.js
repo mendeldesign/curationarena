@@ -1,22 +1,25 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 //[MJB]added f or socket.io. based on info found on http://stackoverflow.com/questions/24609991/using-socket-io-in-express-4-and-express-generators-bin-www
 var socket_io = require( "socket.io" );
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
 
+var logger = require('./utils/logFactory').getLogger();
+logger.debug('Launching server...');
 //Express
 var app = express();
 
+//var routes = require('./routes/index');
+
+
 // [MJB] Added for Socket.io
-var io           = socket_io();
-app.io           = io;
+var io = socket_io();
+app.io = io;
 
 var routes = require('./routes/index')(io);
 
@@ -27,14 +30,17 @@ app.use(express.static(__dirname + '/public'));
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+var users = require('./routes/users');
 app.use('/users', users);
+var files = require('./routes/files');
+app.use('/files/', files);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -3,6 +3,9 @@
 /**
  * Module dependencies.
  */
+"use strict";
+
+var logger = require('../utils/logFactory').getLogger();
 
 var app = require('../app');
 var debug = require('debug')('curationarena:server');
@@ -33,7 +36,7 @@ server.on('listening', onListening);
 /**
  * [MJB] Added for chat functionality
  */
-var io     = app.io
+var io     = app.io;
 io.attach(server);
 
 /**
@@ -94,4 +97,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  logger.debug('Server listening on ' + bind);
 }

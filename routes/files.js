@@ -59,15 +59,13 @@ router.get('/images', function(req, res, next) {
   });
 });
 
-
-/**TODO fix to get image as a resource */
 router.get('/images/:file', function(req, res, next) {
   var imageService = require('../services/imageService');
-  var file;
-  file = req.params.file;
-  var pathUserA = "/Users/jmunoza/odrive/Dropbox/Curation\ " +
-    "Prototype/curationarena/public/images/photos_A";
-  res.sendFile(pathUserA + '/' + file);
+  var fileName;
+  fileName = req.params.file;
+  imageService.getImage(fileName, function (err, pathToFile){
+    res.sendFile(pathToFile);
+  });
 });
 
 module.exports = router;

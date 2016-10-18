@@ -11,7 +11,7 @@ var storedImages = [];
 var pathMendel = "./images/photos_A";
 var pathJesus= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
   "Prototype/curationarena/public/images/photos_A";
-  var pathTest = pathMendel<
+  var pathTest = pathMendel;
 
 /**
  *
@@ -47,9 +47,8 @@ imageService.processImageFromDir = function processImageFromDir(userId, path, cb
   fs.readdir(path, function(err, files) {
     // Check for images and push on the array if it's a match.
     files.some(function(name){
-        name.substr(-4).match(/(png|jpeg|jpg|gif)/) && images.push(new imageSchema(userId, path + '/' + name, name));
-      }
-    );
+      name.substr(-4).match(/(png|jpeg|jpg|gif|JPG|JPEG|PNG|GIF)/) && images.push(new imageSchema(userId, path + '/' + name, name));
+    });
     if(err)
       return cb(err);
     else return cb(null,images);
@@ -101,36 +100,7 @@ imageService.getImages = function getImages(path,cb) {
 
 /**TODO fix image lookup through USER_ID, URL and Path */
 imageService.getImage = function getImage(url, cb) {
-  var img = {};
-  logger.debug("Looking for image at URL: " + url);
-  var async = require('async');
-  async.waterfall([
-    function findImage(url, cb) {
-      var foundImg = null;
-      storedImages.some(function(image) {
-        if(url == image.url) {
-          logger.debug("URL correct");
-          foundImg = image;
-          return true;
-        };
-      });
-      if(foundImg) cb(null, foundImg);
-      var err = new Error('Not Found');
-      err.status = 404;
-      cb(err);
-    },
-    function readFile(image, cb) {
-      logger.debug(image);
-      var fs = require("fs");
-      fs.readFile(image.filePath + "/" + image.fileName, function(err, data) {
-        if (err) cb(err); // Fail if the file can't be read.
-        cb(null, data);
-      });
-    }
-  ], function(err, data){
-
-  });
-
+  cb(null, pathTest + '/' + url);
 };
 
 

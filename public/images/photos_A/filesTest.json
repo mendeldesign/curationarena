@@ -1,24 +1,20 @@
 {  
-   "photos":[  
+   "files":[
       {
          "user":"UserA",
          "path":"./images/photos_A/P1010342.JPG",
          "directory": "./images/photos_A/",
          "name":"P1010342.JPG",
-         "url":"/files/images/P1010342.JPG",
-         "orientation": "1",
-         "rotation": "Rotate 90 CW",
-         "width": "2048",
-         "height": "1360",
+         "is_directory": "false",
+         "bytes" : "2048",
+         "size"  : "2048 bytes",
          "original_time": "2007:12:25 17:42:40",
          "creation_time": "2007:12:25 17:42:40",
          "modified_time": "2016:10:17 17:41:04+02:00",
          "access_time": "2016:10:17 17:41:04+02:00",
          "file_type_extension":"jpg",
          "mime_type":"image/jpeg",
-         "icon" : "image",
-         "bytes" : "2048",
-         "size"  : "2048 bytes"
+         "icon" : "image"
       }
    ]
 }

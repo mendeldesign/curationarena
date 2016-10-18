@@ -26,7 +26,18 @@ var socket = io("");
 function getImageDiv(w,h,o, callback){   
 	//var maxHeight = $(".grid").height();
 
-	if(o != "Rotate"){
+	if(o == "Rotate 90 CW"){
+		//rotate
+		console.log("image orientation is 90 CW!");
+	}
+	else if(o == ""){
+	}
+	else if(o == ""){
+	}
+	else if(o == ""){
+
+	}
+	else{
 		if(w >= h){
 
 			if(w <= 664){
@@ -57,7 +68,7 @@ function getImageDiv(w,h,o, callback){
 				callback("","grid-item--port-big");
 			}
 		}
-	};
+	}
 };
 
 /*
@@ -84,7 +95,7 @@ function getRandomInt(min, max) {
 //var photoArray = new Array();
 
 //jQuery.getJSON('/files/images', function(data){
-jQuery.getJSON('./images/photos_A/photosEXIFtest.json', function(data){
+jQuery.getJSON('./images/photos_A/photosEXIFtestMendel.json', function(data){
 	$.each(data.photos, function (i, f) {
 
 		var w = f.exif['image width'];

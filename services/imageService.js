@@ -8,7 +8,7 @@ var logger = require('../utils/logFactory').getLogger();
 var imageService = {};
 var storedImages = [];
 
-var pathMendel = "./images/photos_A";
+var pathMendel = "../public/images/photos_A";
 var pathJesus= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
   "Prototype/curationarena/public/images/photos_A";
   var pathTest = pathMendel;
@@ -44,7 +44,7 @@ var imageSchema = function imageSchema(userId, filePath, fileName, exifData, url
 imageService.processImageFromDir = function processImageFromDir(userId, path, cb) {
   var images = [];
   var fs = require("fs");
-  fs.readdir(path, function(err, files) {
+  fs.readdir(pathTest, function(err, files) {
     // Check for images and push on the array if it's a match.
     files.some(function(name){
       name.substr(-4).match(/(png|jpeg|jpg|gif|JPG|JPEG|PNG|GIF)/) && images.push(new imageSchema(userId, path + '/' + name, name));

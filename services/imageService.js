@@ -7,10 +7,11 @@ var fs = require("fs");
 var logger = require('../utils/logFactory').getLogger();
 var imageService = {};
 var storedImages = [];
-var pathUserA = "./images/photos_A";
-var pathUSerB = "./images/photos_B";
-var pathTest= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
+
+var pathMendel = "./images/photos_A";
+var pathJesus= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
   "Prototype/curationarena/public/images/photos_A";
+  var pathTest = pathMendel<
 
 /**
  *

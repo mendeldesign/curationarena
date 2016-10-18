@@ -24,49 +24,39 @@ var socket = io();
 
 
 //get the size of the image, based on the URL
-function getImageSize(url, callback){   
-	var img = new Image();
+function getImageDiv(w,h,imageOrientation, callback){   
 	//var maxHeight = $(".grid").height();
 
-	// layout Isotope after each image loads
-	//$grid.imagesLoaded().progress( function() {
-	$(img).on('load', function(){
-		console.log("image is loaded "+ url);
+		if(imageOrientation == "landscape"){
 
-		if(this.width >= this.height){
-
-			if(this.width <= 664){
-				callback( "", "", "landscape", "");
-			}
-			else if(this.width > (2 * this.height)){
-				callback( "", "", "panorama", "grid-item--pano");
-			}			
+			if(w <= 664){
+				callback("");
+			}		
 			else{
 				//create random height:
 				if (getRandomInt(1,5) > 1){
-					callback( "", "", "landscape", "");
+					callback("");
 				}
 				else if (getRandomInt(1,5) < 1){
-					callback( "", "", "landscape", "grid-item--land-big");
+					callback("grid-item--land-big");
 				}
 			}
 		}
-		else{
-			if (this.height > (1.5 * this.width)){
-				callback( "", "", "port-pano", "grid-item--port-pano");
-			}	
+		else if(imageOrientation == "portrait"){
 			//create random size:
 			else if (getRandomInt(1,5) > 4){
-				callback( "", "", "portrait", "grid-item--port-small");
+				callback("grid-item--port-small");
 			}
 			else if (getRandomInt(1,5) < 4){
-				callback( "", "", "portrait", "grid-item--port-big");
+				callback("grid-item--port-big");
 			}
+		}
+		else if(imageOrientation == "panorama"){
+			callback("grid-item--pano");
+		}
+		else if(imageOrientation == "port-pano")
+			callback("grid-item--port-pano");
 		};
-	});
-
-	img.src = url;
-	//});  	
 };
 
 
@@ -76,13 +66,13 @@ function getRandomInt(min, max) {
 
 
 //Upon recieving the image URL from the ipad
-socket.on('chat message', function(addItem, url){
+socket.on('chat message', function(addItem, url, w, h, imageOrientation, c){
 console.log(addItem +" "+url);
 
 	//Add items that were selected on iPad
 	if(addItem==true){
 
-		getImageSize(url, function(w,h,o,c){
+		getImageDiv(w,h,imageOrientation, function(imageClass){
 			//console.log("W " + w +"px H "+ h + "px " + o);
 
 			//photo in een predefined div
@@ -91,10 +81,17 @@ console.log(addItem +" "+url);
 			//photo als div aan de body toegevoegd
 			// create new item elements
 			//optie 3 zonder onclick, want die komt op de .grid-item class te staan
-			var $photoDiv = $("<div class='grid-item "+ c + "'><img src="+url+" width='" + w +"'height='" + h +"' id='" + o+"'/></div>");
+			var $photoDiv = $("<div class='grid-item "+ imageClass + "'><img src="+url+" width='" + w +"'height='" + h +"' id='" + imageOrientation +"'/></div>");
 			//var $photoItem = getItemSize($photoDiv);
 
 			//photoArray.push( $photoItem );
+
+			//loader!!!
+				// layout Isotope after each image loads
+	//$grid.imagesLoaded().progress( function() {
+	//$(img).on('load', function(){
+		//console.log("image is loaded "+ url);
+			
 			// append items to grid
 			$grid.append( $photoDiv )
 			// add and lay out newly appended items

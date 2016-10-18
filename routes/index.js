@@ -18,11 +18,11 @@ module.exports = function(io) {
         console.log('iPad connected');
         
         //when reveiving a message
-        socket.on('chat message', function(i,msg){
-          console.log('request ' + i +" "+ msg);
+        socket.on('chat message', function(i,url, w, h, imageOrientation, imageclass){
+          console.log('request ' + i +" "+ url);
 
           //broadcast the message to the other people
-          io.emit('chat message', i , msg);
+          io.emit('chat message', i, url, w, h, imageOrientation, imageclass);
         });
   		
   		//log when a user is disconnected

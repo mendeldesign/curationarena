@@ -23,49 +23,41 @@ var $grid = $('.grid').isotope({
 var socket = io("");
 
 //get the size of the image, based on the URL.
-function getImageSize(url, callback){   
-	var img = new Image();
+function getImageDiv(w,h,o, callback){   
 	//var maxHeight = $(".grid").height();
 
-	// layout Isotope after each image loads
-	//$grid.imagesLoaded().progress( function() {
-	$(img).on('load', function(){
-		console.log("image is loaded "+ url);
+	if(o != "Rotate"){
+		if(w >= h){
 
-		if(this.width >= this.height){
-
-			if(this.width <= 664){
-				callback( "", "", "landscape", "");
+			if(w <= 664){
+				callback("landscape", "");
 			}
-			else if(this.width > (2 * this.height)){
-				callback( "", "", "panorama", "grid-item--pano");
+			else if(w > (2 * h)){
+				callback("panorama", "grid-item--pano");
 			}			
 			else{
 				//create random height:
 				if (getRandomInt(1,5) > 3){
-					callback( "", "", "landscape", "");
+					callback("landscape", "");
 				}
 				else if (getRandomInt(1,5) < 3){
-					callback( "", "", "landscape", "grid-item--land-big");
+					callback("landscape", "grid-item--land-big");
 				}
 			}
 		}
 		else{
-			if (this.height > (1.5 * this.width)){
-				callback( "", "", "port-pano", "grid-item--port-pano");
+			if (h > (1.5 * w)){
+				callback("port-pano", "grid-item--port-pano");
 			}	
 			//create random size:
 			else if (getRandomInt(1,5) > 2.5){
-				callback( "", "", "portrait", "grid-item--port-small");
+				callback("portrait", "grid-item--port-small");
 			}
 			else if (getRandomInt(1,5) < 2.5){
-				callback( "", "", "portrait", "grid-item--port-big");
+				callback("","grid-item--port-big");
 			}
-		};
-	});
-
-	img.src = url;
-	//});  	
+		}
+	};
 };
 
 /*
@@ -88,16 +80,19 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
 //eerst alle photos in een array duwen om de volgorde te bewaren?
 //var photoArray = new Array();
 
-jQuery.getJSON('./images/photos_A/photosA.json', function(data){
-//jQuery.getJSON('http://131.155.239.135:3000/files/images', function(data){
+//jQuery.getJSON('/files/images', function(data){
+jQuery.getJSON('./images/photos_A/photosEXIFtest.json', function(data){
 	$.each(data.photos, function (i, f) {
 
-		getImageSize(f.url, function(w,h,o,c){
-						//console.log("W " + w +"px H "+ h + "px " + o);
+		var w = f.exif['image width'];
+		var h = f.exif['image height'];
+		var o = f.exif['orientation'];
+
+		getImageDiv(w,h,o, function(imageOrientation, imageClass){
+					 //console.log("W " + w +"px H "+ h + "px " + o);
 
 					 //photo in een predefined div
 					 //$("#"+f.id).append("<img src="+f.url+" height='" + randomHeight + "' id='" + f.id+"' onclick="+photoURL+"/>");
@@ -105,10 +100,17 @@ jQuery.getJSON('./images/photos_A/photosA.json', function(data){
 					 //photo als div aan de body toegevoegd
 					 // create new item elements
 					//optie 3 zonder onclick, want die komt op de .grid-item class te staan
-					var $photoDiv = $("<div class='grid-item "+ c + "'><img src="+f.url+" width='" + w +"'height='" + h +"' id='" + o+"'/></div>");
+					var $photoDiv = $("<div class='grid-item "+ imageClass + "'><img src="+f.url+" width='" + w +"'height='" + h +"' id='" + imageOrientation +"'/></div>");
 					 //var $photoItem = getItemSize($photoDiv);
 					 
 					 //photoArray.push( $photoItem );
+					 
+					 //!!!on load thing!!!
+					 // layout Isotope after each image loads
+	//$grid.imagesLoaded().progress( function() {
+					 	//$(img).on('load', function(){
+	//	console.log("image is loaded "+ url);
+
 					 // append items to grid
 					 $grid.append( $photoDiv )
 				    	// add and lay out newly appended items
@@ -130,10 +132,20 @@ $grid.on( 'click', '.grid-item', function() {
   //console.log($(this).hasClass("item--selected"));
   //toggle selector
 
+  var url = $(this).children([0]).attr("src");
+  var w = $(this).children([0]).attr("width");
+  var h = $(this).children([0]).attr("height");
+  var imageOrientation = $(this).children([0]).attr("id");
+  var imageClass = $(this).class();
+
+  //already create the div that will be sent to the other screen
+  var $photoDiv = $("<div class='"+ imageClass + "'><img src="+url+" width='" + w +"'height='" + h +"' id='" + imageOrientation +"'/></div>")
+
+
   if($(this).hasClass("item--selected") == true)
   {
  	//send the URL to the other screen
-	socket.emit('chat message', false, $(this).children([0]).attr("src"));// children([0]).attr("src"));
+	socket.emit('chat message', false, url, w, h, imageOrientation, imageclass);// children([0]).attr("src"));
 	  //remove item from the other screen:
 	  console.log("deselected " + $(this).children([0]).attr("src"));//children([0]).attr("src")); 
 
@@ -146,10 +158,10 @@ $grid.on( 'click', '.grid-item', function() {
 	else if($(this).hasClass("item--selected") == false)
 	{
 	  //send the URL to the other screen
-	  socket.emit('chat message', true, $(this).children([0]).attr("src"));
+	  socket.emit('chat message', true, url, w, h, imageOrientation, imageclass);
 	 
 	  //send this item to the other screen:
-	  console.log("selected " +$(this).children([0]).attr("src")); 
+	  console.log("selected " +  $(this).children([0]).attr("src")); 
 
 	  // toggle the class of the item to show/hide visibility on the screen
 	  $(this).addClass("item--selected"); 

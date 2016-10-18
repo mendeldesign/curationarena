@@ -6,13 +6,13 @@ var fs = require("fs");
 var logger = require('../utils/logFactory').getLogger();
 var fileService = [];
 
-var fileSchema = function fileSchema(filePath, root, isDir, bytes,  icon, modified, callback) {
+var fileSchema = function fileSchema(filePath, directory, isDir, bytes,  icon, modified, callback) {
   var file = this;
   file.path = filePath;
   file.is_dir = isDir || false;
   file.icon = icon || '';
   file.bytes = bytes || 0;
-  file.root = root || '';
+  file.directory = directory || '';
   file.modified = modified;
   file.size = bytes + ' bytes';
   if(callback)

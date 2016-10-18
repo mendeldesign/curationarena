@@ -54,12 +54,20 @@ router.get('/images', function(req, res, next) {
   imageService.getImages(path, function(err, images){
     if(err) res.status(err.status || 400).send(err);
     else {
+      //var _ = require('underscore');
+      //_.sortBy(images)
+      images.sort(function(a,b){
+        var dateA = (new Date(a.original_time));
+        var dateB = (new Date(b.original_time));
+        logger.verbose(i++);
+        return (dateA - dateB);
+      });
       return res.status(200).send({ photos: images });
     }
   });
 });
 
-router.get('/images/:file', function(req, res, next) {
+router.get('/images/:file', urlencodedParser, function(req, res, next) {
   var imageService = require('../services/imageService');
   var fileName;
   fileName = req.params.file;

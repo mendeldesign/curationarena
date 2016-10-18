@@ -30,8 +30,8 @@
         $('#m').val('');
         return false;
       });
-      socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
+      socket.on('chat message', function(selected, url, w, h, gridItemClass, imageOrientation){
+        $('#messages').append($('<li>').text(selected +" "+ url +" "+ w +" "+ h  +" itemclass "+gridItemClass+" orientation "+ imageOrientation));
       });
 
     </script>

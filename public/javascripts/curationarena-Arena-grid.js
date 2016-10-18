@@ -1,7 +1,7 @@
 /*	SCRIPT: curationarena-Arena-grid.js
 	Curation Arena Prototype
-	version Oktober 7 2016
-	created by Mendel Broekhuijsen
+	version Oktober 18 2016
+	created by Mendel Broekhuijsen & Jesús Muñoz Alcantara
 
 	EXTERNAL JS: isotope.pkgd.js, masonry-horizontal.js, 
 	??? imagesloaded.pkgd.js ???
@@ -11,7 +11,7 @@
 //init Masonry to enable automatic layout
 var $grid = $('.grid').isotope({
 	layoutMode: 'masonryHorizontal',
-	itemSelector: '.grid-item',
+	itemSelector: '.arena-item',
 	masonryHorizontal: {
     	//the row-heights should match the smallest height of the height of the photos, as defined in the .css file
     	rowHeight: 249, 
@@ -38,7 +38,7 @@ function getImageDiv(w,h,imageOrientation, callback){
 					callback("");
 				}
 				else if (getRandomInt(1,5) < 1){
-					callback("grid-item--land-big");
+					callback("arena-item--land-big");
 				}
 			}
 		}

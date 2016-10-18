@@ -1,3 +1,8 @@
+  /* CSS: 
+   * version Oktober 18 2016
+   * created by Mendel Broekhuijsen
+   */
+
 * { box-sizing: border-box; }
 
 /* inherit height from window */
@@ -20,13 +25,23 @@ body { background-color: black; margin: 0 0 0 0; }
   clear: both;
 }
 
+/*******IPAD GRID ITEMS*******\
+
+/* Height iPad = 768px - 20px status bar = 748px
+ * (If status bar= black-transparent, height = full 768px)
+ * The grid is define with the row height of 249px
+ * height 249 | 498 | 747
+ * width (166) | 332 | 664 | 996
+ * Height leaves 1px on the bottom of the div.
+ */
+
 /* ---- .grid-item ---- */
 
 /* ----landscape small ---*/
 .grid-item {
   float: left;
-  width: 332px;
-  height: 249px;
+  width: 332px; /*grid row-width*/
+  height: 249px;/*grid row*/
   /*background: #E6E6E6;*/
   border: 1px solid #FFF;
   overflow: hidden;
@@ -48,38 +63,155 @@ body { background-color: black; margin: 0 0 0 0; }
 
 /* ----portrait small ---*/
 .grid-item--port-small { 
-	width: 166px;
-	height: 249px;
+	width: 166px; /*grid row-width/ 2*/
+	height: 249px;/*grid row*/
 }
 .grid-item--port-small img {max-width: none; max-height: 100%;}
 
 /* ----portrait big ---*/
 .grid-item--port-big {
-	width: 332px;
-	height: 498px;
+	width: 332px; /*grid row-width*/
+	height: 498px; /*grid row x 2*/
 }
+
 .grid-item--port-big img {max-width: none; max-height: 100%;}
 
 /* ----panorama ---*/
 .grid-item--pano {
-	width: 664px;
-	height: 249px;
+	width: 664px;/*grid row-width x 2*/
+	height: 249px;/*grid row*/
 }
 .grid-item--pano img {max-width: none; max-height: 100%;}
 
 .grid-item--port-pano {
-	width: 332px;
-	height: 747px;
+	width: 332px; /*grid row*/
+	height: 747px; /*grid row x 3*/
 }
 .grid-item--port-pano img {max-height: 100%; max-width: none;}
 
-/*#portrait{ max-height:100% }
-#landscape{ max-width:100% }
-*/
+/* ----square ---*/
+.grid-item--square {
+  width: 249px;/*grid row*/
+  height: 249px;/*grid row*/
+}
+.grid-item--square img {max-width: 100%; max-height: 100%;}
 
-/*when selected*/
+
+.portrait{ max-height:100% }
+.landscape{ max-width:100% }
+
+
+/* when selected */
 .item--selected{
 	border: 15px solid #FFF;	
 	/*opacity: 0.4;*/
-	}
+}
+
+/* 
+ * Rotations thanks to https://gist.github.com/mbonaci/9911390
+ */
+.rotate90 {
+  max-width: none; 
+  max-height: 100%;
+  -webkit-transform:  translateY(-100%) rotate(90deg);
+  -moz-transform:     translateY(-100%) rotate(90deg);
+  -ms-transform:      translateY(-100%) rotate(90deg);
+  transform:          translateY(-100%) rotate(90deg);
+  
+  -webkit-transform-origin:   left bottom;
+  -moz-transform-origin:      left bottom;
+  -ms-transform-origin:       left bottom;
+  transform-origin:           left bottom;
+}
+
+.rotate180 {
+  -webkit-transform:  rotate(180deg);
+  -moz-transform:     rotate(180deg);
+  -ms-transform:      rotate(180deg);
+  transform:          rotate(180deg);
+}
+
+.rotate270 {
+  -webkit-transform:  translateX(-100%) rotate(-90deg);
+  -moz-transform:     translateX(-100%) rotate(-90deg);
+  -ms-transform:      translateX(-100%) rotate(-90deg);
+  transform:          translateX(-100%) rotate(-90deg);
+  
+  -webkit-transform-origin:   top right;
+  -moz-transform-origin:      top right;
+  -ms-transform-origin:       top right;
+  transform-origin:           top right;
+}
+
+
+
+/*******ARENA GRID ITEMS*******\
+
+/* Height Arena = height:1200px; width:10080px
+ * The grid is define with the row height of 399px
+ * height 399 | 798 | 1197
+ * width (266) | 532 | 1064 | 1596
+ * The height will leave 3px on the bottom of the view (in black)
+ */
+
+/* ---- .arena-item ---- */
+
+/* ----landscape small ---*/
+.arena-item {
+  float: left;
+  width: 532px; /*grid row-width*/
+  height: 399px; /*grid row*/
+  /*background: #E6E6E6;*/
+  border: 1px solid #FFF;
+  overflow: hidden;
+  margin: 0px;
+}
+
+.arena-item img {
+  display:block;
+  vertical-align: middle;
+  max-width: 100%;
+  max-height: none;
+}
+
+/* ----landscape big ---*/
+.arena-item--land-big { 
+  width: 1064px; /*grid row-width *2*/
+  height: 798px; /*grid row x 2*/ 
+}
+
+/* ----portrait small ---*/
+.arena-item--port-small { 
+  width: 266px; /*grid row-width/ 2*/
+  height: 399px;/*grid row*/
+}
+.arena-item--port-small img {max-width: none; max-height: 100%;}
+
+/* ----portrait big ---*/
+.arena-item--port-big {
+  width: 532px; /*grid row-width*/
+  height: 798px; /*grid row x 2*/
+}
+
+.arena-item--port-big img {max-width: none; max-height: 100%;}
+
+/* ----panorama ---*/
+.arena-item--pano {
+  width: 1064px;/*grid row-width x 2*/
+  height: 399px;/*grid row*/
+}
+.arena-item--pano img {max-width: none; max-height: 100%;}
+
+.arena-item--port-pano {
+  width: 532px; /*grid row-width*/
+  height: 1197px; /*grid row x 3*/
+}
+.arena-item--port-pano img {max-height: 100%; max-width: none;}
+
+/* ----square ---*/
+.arena-item--square {
+  width: 399px;/*grid row*/
+  height: 399px;/*grid row*/
+}
+.arena-item--square img {max-width: 100%; max-height: 100%;}
 

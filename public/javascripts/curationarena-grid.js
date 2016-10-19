@@ -31,7 +31,7 @@ function getImageDiv(w,h,o, callback){
 	var params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape"};
 
 	//square images
-	if(Math.abs((w/h)-1) < 0,01){
+	if(Math.abs((w/h)-1) < 0.01){
 		params = {width: "249px", height: "249px", imageClass: "grid-item--square", imageOrientation: "square"};
 	}
 	//landscape panoramas
@@ -40,120 +40,124 @@ function getImageDiv(w,h,o, callback){
 		params = {width:"", height:"249px", imageClass:"grid-item--pano", imageOrientation: "panorama"};
 	}
 	//portrait panoramas
-	if (h > (1.5 * w)){
+	else if (h > (1.5 * w)){
 		//params = {width:"332px", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
 		params = {width:"", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
 	}	
-	
-	/*
-	1 = Horizontal (normal) 
-	2 = Mirror horizontal 
-	3 = Rotate 180 
-	4 = Mirror vertical 
-	5 = Mirror horizontal and rotate 270 CW 
-	6 = Rotate 90 CW 
-	7 = Mirror horizontal and rotate 90 CW 
-	8 = Rotate 270 CW
-	*/
-	//console.log(o);
-	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+	else{
+		/*
+		1 = Horizontal (normal) 
+		2 = Mirror horizontal 
+		3 = Rotate 180 
+		4 = Mirror vertical 
+		5 = Mirror horizontal and rotate 270 CW 
+		6 = Rotate 90 CW 
+		7 = Mirror horizontal and rotate 90 CW 
+		8 = Rotate 270 CW
+		*/
+		//console.log(o);
+		var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
-	switch(o){
-		//rotated portrait
-		case "Rotate 90 CW":  
-			//rotate
-			console.log("image orientation is 90 CW!");
-			//if rotated portrait is too small
-			if(w < 498){
-				//iOS safari does the rotation by itself
-				if (iOS == true) {
-					params = {width: "", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"};
+		switch(o){
+			//rotated portrait
+			case "Rotate 90 CW":  
+				//rotate
+				console.log("image orientation is 90 CW!");
+				//if rotated portrait is too small
+				if(w < 498){
+					//iOS safari does the rotation by itself
+					if (iOS == true) {
+						params = {width: "", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait ios-rotate90 mini"};
+					}
+					else{
+						//NB w and h are the other way around!
+						params = {width: "", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate90 mini"};
+					}
 				}
 				else{
-					//NB w and h are the other way around!
-					params = {width: "", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate90"};
+					if(iOS == true){
+						params = getRandomDiv("portrait");
+						//to make sure that the rotation does not get forgotten after the ipad used it
+						params.imageOrientation += " ios-rotate90";
+					}
+					else{
+						params = getRandomDiv("portrait_w-h-flip");
+						params.imageOrientation += " rotate90";
+					}
 				}
-			}
-			else{
-				if(iOS == true){
+				break;
+			//upside down landscape
+			case "Rotate 180":
+				//if photo is too small
+				if(w < 664){
+					//iOS safari does the rotation by itself
+					if (iOS == true) {
+						params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape ios-rotate180 mini"};
+					}
+					else{
+						//NB w and h are the other way around!
+						params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape rotate180 mini"};
+					}
+				}
+				else{
+					if(iOS == true){
+						params = getRandomDiv("landscape");
+						params.imageOrientation += " ios-rotate180"; 
+					}
+					else{
+						params = getRandomDiv("landscape");
+						params.imageOrientation += " rotate180";
+					}
+				}
+				break;
+			//rotated upside downs portrait
+			case "Rotate 270 CW":
+				//if photo is too small
+				if(w < 498){
+					//iOS safari does the rotation by itself
+					if (iOS == true) {
+						params = {width: "", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait ios-rotate270 mini"};
+					}
+					else{
+						//NB w and h are the other way around!
+						params = {width: "", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate270 mini"};
+					}
+				}
+				else{
+					if(iOS == true){
+						params = getRandomDiv("portrait");
+						params.imageOrientation += " ios-rotate270";
+					}
+					else{
+						params = getRandomDiv("portrait_w-h-flip");
+						params.imageOrientation += " rotate270";				
+					}
+				}
+				break;
+			//landscape photos
+			case "Horizontal (normal)":
+				//if photo is too small
+				if(w < 664){
+					//if tag is Horizontal (normal) but image is still portrait
+					if(w < h){
+						params = {width: "", height: "332px", imageClass: "", imageOrientation: "portrait mini"};
+					}
+					else{
+						params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape mini"};
+					}
+				}
+				else if(w < h){
 					params = getRandomDiv("portrait");
 				}
-				else{
-					params = getRandomDiv("portrait_w-h-flip");
-					params.imageOrientation += " rotate90";
-				}
-			}
-			break;
-		//upside down landscape
-		case "Rotate 180":
-			//if photo is too small
-			if(w < 664){
-				//iOS safari does the rotation by itself
-				if (iOS == true) {
-					params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape"};
-				}
-				else{
-					//NB w and h are the other way around!
-					params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape rotate180"};
-				}
-			}
-			else{
-				if(iOS == true){
+				else
 					params = getRandomDiv("landscape");
-				}
-				else{
-					console.log("Rotate 180?");
-					params = getRandomDiv("landscape");
-					params.imageOrientation += " rotate180";
-				}
-			}
-			break;
-		//rotated upside downs portrait
-		case "Rotate 270 CW":
-			//if photo is too small
-			if(w < 498){
-				//iOS safari does the rotation by itself
-				if (iOS == true) {
-					params = {width: "", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"};
-				}
-				else{
-					//NB w and h are the other way around!
-					params = {width: "", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate270"};
-				}
-			}
-			else{
-				if(iOS == true){
-					params = getRandomDiv("portrait");
-				}
-				else{
-					params = getRandomDiv("portrait_w-h-flip");
-					params.imageOrientation += " rotate270";				
-				}
-			}
-			break;
-		//landscape photos
-		case "Horizontal (normal)":
-			//if photo is too small
-			if(w < 664){
-				//if tag is Horizontal (normal) but image is still portrait
-				if(w < h){
-					params = {width: "", height: "332px", imageClass: "", imageOrientation: "portrait"};
-				}
-				else{
-					params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape"};
-				}
-			}
-			else if(w < h){
-				params = getRandomDiv("portrait");
-			}
-			else
-				params = getRandomDiv("landscape");
 
-			break;
-		default: params = getRandomDiv("landscape");
-			break;
+				break;
+			default: params = getRandomDiv("landscape");
+				break;
 
-	};	
+		};	
+	}
 	return callback(params);
 };
 
@@ -207,9 +211,9 @@ function getRandomDiv(o) {
 
 //eerst alle photos in een array duwen om de volgorde te bewaren?
 //var photoArray = new Array();
-
-//jQuery.getJSON('131.155.239.139:3000/files/'+ userID+'/images', function(data){
-jQuery.getJSON('./images/photos_A/photosEXIFtest.json', function(data){
+var userID = "Mendel";
+jQuery.getJSON('/files/'+ userID+'/images', function(data){
+//jQuery.getJSON('./images/photos_A/photosEXIFtest.json', function(data){
 	$.each(data.photos, function (i, f) {
 		
 		console.log(f.width + " "+f.height);
@@ -230,7 +234,7 @@ jQuery.getJSON('./images/photos_A/photosEXIFtest.json', function(data){
 			//pre-loader doe not work because the smaller items are loaded faster
 			//var img = new Image();
 			//$(img).on('load', function(){
-				var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.path+" width='" + params.width +"'height='" + params.height +"' class='" + params.imageOrientation +"'/></div>");
+				var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.url+" width='" + params.width +"'height='" + params.height +"' class='" + params.imageOrientation +"'/></div>");
 				//var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.path+" class='" + params.imageOrientation +"'/></div>");
 			 	//var $photoItem = getItemSize($photoDiv);
 			 

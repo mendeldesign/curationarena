@@ -7,7 +7,7 @@ var fs = require("fs");
 var logger = require('../utils/logFactory').getLogger();
 var imageService = {};
 
-var pathMendel = "/Users/jmunoza/wee/workspace/curationarena/public/images/photos_A";
+var pathMendel = '/Users/Mendel/Library/Mobile\ Documents/com~apple~CloudDocs/PhD\ Drive/Prototypes/2016_08\ On-demand\ curation/Website/curationarena/public/images/photos_A/';
 var pathJesus= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
   "Prototype/curationarena/public/images/photos_A";
 var pathTest = pathMendel;

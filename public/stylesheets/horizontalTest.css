@@ -157,7 +157,7 @@ body { background-color: black; margin: 0 0 0 0; }
 /* ---- .arena-item ---- */
 
 /* ----landscape small ---*/
-.arena-item {
+.arena-item--land-small {
   float: left;
   width: 532px; /*grid row-width*/
   height: 399px; /*grid row*/
@@ -167,7 +167,7 @@ body { background-color: black; margin: 0 0 0 0; }
   margin: 0px;
 }
 
-.arena-item img {
+.arena-item--land--small img {
   display:block;
   vertical-align: middle;
   max-width: 100%;

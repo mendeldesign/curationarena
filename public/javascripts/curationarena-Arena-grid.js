@@ -11,7 +11,7 @@
 //init Masonry to enable automatic layout
 var $grid = $('.grid').isotope({
 	layoutMode: 'masonryHorizontal',
-	itemSelector: '.arena-item',
+	itemSelector: '.grid-item',
 	masonryHorizontal: {
     	//the row-heights should match the smallest height of the height of the photos, as defined in the .css file
     	rowHeight: 249, 
@@ -22,57 +22,151 @@ var $grid = $('.grid').isotope({
 //create a listener for events from the ipads
 var socket = io();
 
-
-//get the size of the image, based on the URL
-function getImageDiv(w,h,imageOrientation, callback){   
+//determine the size of the div, based on the meta data from the json.
+function getImageDiv(w,h,o, callback){   
 	//var maxHeight = $(".grid").height();
 
-		if(imageOrientation == "landscape"){
+	var params = {width: "332px", height: "249px", imageClass: "", imageOrientation: "landscape"};
 
-			if(w <= 664){
-				callback("");
-			}		
+	//not needed, but just to be sure:
+	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+
+	switch(o){
+		//I do not need to set check the sized agian of these again, 
+		//I only need to set the correct sizes (bigger for the arena screen)
+		case "square":
+			params = {width: "249px", height: "249px", imageClass: "grid-item--square", imageOrientation: "square"};
+			break;
+		case "panorama":
+			params = {width:"664px", height:"249px", imageClass:"grid-item--pano", imageOrientation: "panorama"};
+			break;
+		case "port-pano":
+			params = {width:"332px", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
+			break;
+		case "portrait rotate90":  
+			//rotate
+			//if photo is too small
+			if(w < 498){
+				//iOS safari does the rotation by itself
+				if (iOS == true) {
+					params = {width: "166px", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"};
+				}
+				else{
+					//NB w and h are the other way around!
+					params = {width: "249px", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate90"};
+				}
+			}
 			else{
-				//create random height:
-				if (getRandomInt(1,5) > 1){
-					callback("");
+				if(iOS == true){
+					params = getRandomDiv("portrait");
 				}
-				else if (getRandomInt(1,5) < 1){
-					callback("arena-item--land-big");
+				else{
+					params = getRandomDiv("portrait_w-h-flip");
+					params.imageOrientation += " rotate90";
 				}
 			}
-		}
-		else if(imageOrientation == "portrait"){
-			//create random size:
-			else if (getRandomInt(1,5) > 4){
-				callback("grid-item--port-small");
+			break;
+		case "landscape rotate180":
+			//if photo is too small
+			if(w < 664){
+				//iOS safari does the rotation by itself
+				if (iOS == true) {
+					params = {width: "249px", height: "332px", imageClass: "", imageOrientation: "landscape"};
+				}
+				else{
+					//NB w and h are the other way around!
+					params = {width: "332px", height: "249px", imageClass: "", imageOrientation: "landscape rotate180"};
+				}
 			}
-			else if (getRandomInt(1,5) < 4){
-				callback("grid-item--port-big");
+			else{
+				if(iOS == true){
+					params = getRandomDiv("landscape");
+				}
+				else{
+					params = getRandomDiv("landscape");
+					params.imageOrientation += " rotate180";
+				}
 			}
-		}
-		else if(imageOrientation == "panorama"){
-			callback("grid-item--pano");
-		}
-		else if(imageOrientation == "port-pano")
-			callback("grid-item--port-pano");
-		};
+			break;
+		case "portrait rotate270":
+			//if photo is too small
+			if(w < 498){
+				//iOS safari does the rotation by itself
+				if (iOS == true) {
+					params = {width: "166px", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"};
+				}
+				else{
+					//NB w and h are the other way around!
+					params = {width: "249px", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate270"};
+				}
+			}
+			else{
+				if(iOS == true){
+					params = getRandomDiv("portrait");
+				}
+				else{
+					params = getRandomDiv("portrait_w-h-flip");
+					params.imageOrientation += " rotate270";				
+				}
+			}
+			break;
+		case "Horizontal (normal)":
+			//if photo is too small
+			if(w < 664){
+				params = {width: "332px", height: "249px", imageClass: "", imageOrientation: "landscape"};
+			}
+			else
+				params = getRandomDiv("landscape");
+
+			break;
+		default: params = getRandomDiv("landscape");
+			break;
+
+	};	
+	return callback(params);
 };
 
 
-function getRandomInt(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
+function getRandomDiv(o) {
+	var randomInt = Math.floor(Math.random() * 100);
+	console.log(randomInt);
+	switch(o){
+		case "portrait":
+			if(randomInt <= 75){
+				return ({width: "332px", height: "498px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
+			}
+			else{
+				return ({width: "166px", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"});
+			}
+			break;
+		case "portrait_w-h-flip":
+			//NB w and h are the other way around!
+			if(randomInt <= 75){
+				return ({width: "498px", height: "332px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
+			}
+			else{
+				return ({width: "249px", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait"});
+			}
+			break;
+		case "landscape":
+			if(randomInt <= 75){
+			return ({width: "664px", height: "498px", imageClass: "grid-item--land-big", imageOrientation: "landscape"});
+			}
+			else{
+				return ({width: "332px", height: "249px", imageClass: "arena-item--land-small", imageOrientation: "landscape"});
+			}
+			break;
+	}
 }
 
-
 //Upon recieving the image URL from the ipad
-socket.on('chat message', function(addItem, url, w, h, imageOrientation, c){
+socket.on('chat message', function(addItem, url, w, h, gridItemClass, imageOrientation){
 console.log(addItem +" "+url);
 
 	//Add items that were selected on iPad
 	if(addItem==true){
 
-		getImageDiv(w,h,imageOrientation, function(imageClass){
+		//getImageDiv(w,h,imageOrientation, function(params){
 			//console.log("W " + w +"px H "+ h + "px " + o);
 
 			//photo in een predefined div
@@ -80,17 +174,7 @@ console.log(addItem +" "+url);
 
 			//photo als div aan de body toegevoegd
 			// create new item elements
-			//optie 3 zonder onclick, want die komt op de .grid-item class te staan
-			var $photoDiv = $("<div class='grid-item "+ imageClass + "'><img src="+url+" width='" + w +"'height='" + h +"' id='" + imageOrientation +"'/></div>");
-			//var $photoItem = getItemSize($photoDiv);
-
-			//photoArray.push( $photoItem );
-
-			//loader!!!
-				// layout Isotope after each image loads
-	//$grid.imagesLoaded().progress( function() {
-	//$(img).on('load', function(){
-		//console.log("image is loaded "+ url);
+			var $photoDiv = $("<div class='grid-item "+ gridItemClass + "'><img src="+url+" width='" + w +"'height='" + h +"' class='" + imageOrientation +"'/></div>");
 			
 			// append items to grid
 			$grid.append( $photoDiv )
@@ -101,7 +185,7 @@ console.log(addItem +" "+url);
 			//console.log(i);
 			//console.log(f.url +" id = " + f.id);
 
-		});
+		//});
 	}
 	//Remove Items that were deselect on iPad
 	else if(addItem==false){
@@ -117,7 +201,7 @@ console.log(addItem +" "+url);
 
 
 /*
-//Event listeners for the grid items	
+//Event listeners for the grid items, in case interaction with the arena screen is required	
 $grid.on( 'click', '.grid-item', function() {
   //console.log($(this).hasClass("item--selected"));
   //toggle selector

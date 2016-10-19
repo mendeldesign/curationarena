@@ -22,22 +22,27 @@ var $grid = $('.grid').isotope({
 // Socket.io functionality for sending photos
 var socket = io("");
 
-//get the size of the image, based on the URL.
+//var userID = jQuery.url.param("userid");
+
+//determine the size of the div, based on the meta data from the json.
 function getImageDiv(w,h,o, callback){   
 	//var maxHeight = $(".grid").height();
 
-	var params = {width: "332px", height: "249px", imageClass: "", imageOrientation: "landscape"};
+	var params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape"};
 
+	//square images
 	if(Math.abs((w/h)-1) < 0,01){
 		params = {width: "249px", height: "249px", imageClass: "grid-item--square", imageOrientation: "square"};
 	}
-
+	//landscape panoramas
 	else if(w > (2 * h)){
-		params = {width:"664px", height:"249px", imageClass:"grid-item--pano", imageOrientation: "panorama"};
+		//params = {width:"664px", height:"249px", imageClass:"grid-item--pano", imageOrientation: "panorama"};
+		params = {width:"", height:"249px", imageClass:"grid-item--pano", imageOrientation: "panorama"};
 	}
-
+	//portrait panoramas
 	if (h > (1.5 * w)){
-		params = {width:"332px", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
+		//params = {width:"332px", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
+		params = {width:"", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
 	}	
 	
 	/*
@@ -54,18 +59,19 @@ function getImageDiv(w,h,o, callback){
 	var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
 	switch(o){
+		//rotated portrait
 		case "Rotate 90 CW":  
 			//rotate
 			console.log("image orientation is 90 CW!");
-			//if photo is too small
+			//if rotated portrait is too small
 			if(w < 498){
 				//iOS safari does the rotation by itself
 				if (iOS == true) {
-					params = {width: "166px", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"};
+					params = {width: "", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"};
 				}
 				else{
 					//NB w and h are the other way around!
-					params = {width: "249px", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate90"};
+					params = {width: "", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate90"};
 				}
 			}
 			else{
@@ -78,16 +84,17 @@ function getImageDiv(w,h,o, callback){
 				}
 			}
 			break;
+		//upside down landscape
 		case "Rotate 180":
 			//if photo is too small
 			if(w < 664){
 				//iOS safari does the rotation by itself
 				if (iOS == true) {
-					params = {width: "249px", height: "332px", imageClass: "", imageOrientation: "landscape"};
+					params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape"};
 				}
 				else{
 					//NB w and h are the other way around!
-					params = {width: "332px", height: "249px", imageClass: "", imageOrientation: "landscape rotate180"};
+					params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape rotate180"};
 				}
 			}
 			else{
@@ -101,16 +108,17 @@ function getImageDiv(w,h,o, callback){
 				}
 			}
 			break;
+		//rotated upside downs portrait
 		case "Rotate 270 CW":
 			//if photo is too small
 			if(w < 498){
 				//iOS safari does the rotation by itself
 				if (iOS == true) {
-					params = {width: "166px", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"};
+					params = {width: "", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"};
 				}
 				else{
 					//NB w and h are the other way around!
-					params = {width: "249px", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate270"};
+					params = {width: "", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait rotate270"};
 				}
 			}
 			else{
@@ -123,10 +131,20 @@ function getImageDiv(w,h,o, callback){
 				}
 			}
 			break;
+		//landscape photos
 		case "Horizontal (normal)":
 			//if photo is too small
 			if(w < 664){
-				params = {width: "332px", height: "249px", imageClass: "", imageOrientation: "landscape"};
+				//if tag is Horizontal (normal) but image is still portrait
+				if(w < h){
+					params = {width: "", height: "332px", imageClass: "", imageOrientation: "portrait"};
+				}
+				else{
+					params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape"};
+				}
+			}
+			else if(w < h){
+				params = getRandomDiv("portrait");
 			}
 			else
 				params = getRandomDiv("landscape");
@@ -161,27 +179,27 @@ function getRandomDiv(o) {
 	switch(o){
 		case "portrait":
 			if(randomInt <= 75){
-				return ({width: "332px", height: "498px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
+				return ({width: "", height: "498px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
-				return ({width: "166px", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"});
+				return ({width: "", height: "249px", imageClass: "grid-item--port-small", imageOrientation: "portrait"});
 			}
 			break;
 		case "portrait_w-h-flip":
 			//NB w and h are the other way around!
 			if(randomInt <= 75){
-				return ({width: "498px", height: "332px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
+				return ({width: "", height: "332px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
-				return ({width: "249px", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait"});
+				return ({width: "", height: "166px", imageClass: "grid-item--port-small", imageOrientation: "portrait"});
 			}
 			break;
 		case "landscape":
 			if(randomInt <= 75){
-			return ({width: "664px", height: "498px", imageClass: "grid-item--land-big", imageOrientation: "landscape"});
+			return ({width: "664px", height: "", imageClass: "grid-item--land-big", imageOrientation: "landscape"});
 			}
 			else{
-				return ({width: "332px", height: "249px", imageClass: "", imageOrientation: "landscape"});
+				return ({width: "332px", height: "", imageClass: "", imageOrientation: "landscape"});
 			}
 			break;
 	}
@@ -190,8 +208,8 @@ function getRandomDiv(o) {
 //eerst alle photos in een array duwen om de volgorde te bewaren?
 //var photoArray = new Array();
 
-jQuery.getJSON('131.155.239.139:3000/files/images', function(data){
-//jQuery.getJSON('./images/photos_A/photosEXIFtest.json', function(data){
+//jQuery.getJSON('131.155.239.139:3000/files/'+ userID+'/images', function(data){
+jQuery.getJSON('./images/photos_A/photosEXIFtest.json', function(data){
 	$.each(data.photos, function (i, f) {
 		
 		console.log(f.width + " "+f.height);
@@ -201,35 +219,35 @@ jQuery.getJSON('131.155.239.139:3000/files/images', function(data){
 		var o = f.rotation.description;
 
 		getImageDiv(w,h,o, function(params){
-					 //console.log("W " + w +"px H "+ h + "px " + o);
+			 //console.log("W " + w +"px H "+ h + "px " + o);
 
-					 //photo in een predefined div
-					 //$("#"+f.id).append("<img src="+f.url+" height='" + randomHeight + "' id='" + f.id+"' onclick="+photoURL+"/>");
-					 
-					 //photo als div aan de body toegevoegd
-					 // create new item elements
-					//optie 3 zonder onclick, want die komt op de .grid-item class te staan
-					var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.path+" width='" + params.width +"'height='" + params.height +"' class='" + params.imageOrientation +"'/></div>");
-					 //var $photoItem = getItemSize($photoDiv);
-					 
-					 //photoArray.push( $photoItem );
-					 
-					 //!!!on load thing!!!
-					 // layout Isotope after each image loads
-	//$grid.imagesLoaded().progress( function() {
-					 	//$(img).on('load', function(){
-	//	console.log("image is loaded "+ url);
+			 //photo in een predefined div
+			 //$("#"+f.id).append("<img src="+f.url+" height='" + randomHeight + "' id='" + f.id+"' onclick="+photoURL+"/>");
+			 
+			 //photo als div aan de body toegevoegd
+			 // create new item elements
+			
+			//pre-loader doe not work because the smaller items are loaded faster
+			//var img = new Image();
+			//$(img).on('load', function(){
+				var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.path+" width='" + params.width +"'height='" + params.height +"' class='" + params.imageOrientation +"'/></div>");
+				//var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.path+" class='" + params.imageOrientation +"'/></div>");
+			 	//var $photoItem = getItemSize($photoDiv);
+			 
+			 	//photoArray.push( $photoItem );
+			 
+			 	// append items to grid
+			 	$grid.append( $photoDiv )
+				// add and lay out newly appended items
+				.isotope( 'appended', $photoDiv );
 
-					 // append items to grid
-					 $grid.append( $photoDiv )
-				    	// add and lay out newly appended items
-				    	.isotope( 'appended', $photoDiv );
-
-					//	 $(".grid").append("<div class='grid-item'><img src="+f.url+" height='" + randomHeight + "' id='" + f.id+"' onclick=" +photoURL+" /></div>");
-						 //console.log(i);
-						 //console.log(f.url +" id = " + f.id);
-
-						});
+				//	 $(".grid").append("<div class='grid-item'><img src="+f.url+" height='" + randomHeight + "' id='" + f.id+"' onclick=" +photoURL+" /></div>");
+				 //console.log(i);
+				 //console.log(f.url +" id = " + f.id);
+			
+			//});
+			//img.src = f.path;
+		});
 
 	});
 
@@ -256,7 +274,7 @@ $grid.on( 'click', '.grid-item', function() {
  	//send the URL to the other screen
 	socket.emit('chat message', false, url, w, h, gridItemClass, imageOrientation);// children([0]).attr("src"));
 	  //remove item from the other screen:
-	  console.log("deselected " + $(this).children([0]).attr("src"));//children([0]).attr("src")); 
+	  console.log("deselected " + url);//children([0]).attr("src")); 
 
 	  // toggle the class of the item to show/hide visibility on the screen
 	  $( this ).removeClass("item--selected");
@@ -270,7 +288,7 @@ $grid.on( 'click', '.grid-item', function() {
 	  socket.emit('chat message', true, url, w, h, gridItemClass, imageOrientation);
 	 
 	  //send this item to the other screen:
-	  console.log("selected " +  $(this).children([0]).attr("src")); 
+	  console.log("selected " +  url); 
 
 	  // toggle the class of the item to show/hide visibility on the screen
 	  $(this).addClass("item--selected"); 

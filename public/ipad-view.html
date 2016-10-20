@@ -31,13 +31,57 @@ Created by Mendel Broekhuijsen-->
 
   <!--Om fotos te pre-laden-->
   <script type="text/javascript" src="javascripts/imagesloaded.pkgd.js"></script>
+   <script type="text/javascript" src="javascripts/spin.js"></script>
 
   <link href="stylesheets/prototip.css" rel="stylesheet" type="text/css" media="screen" />
+
+  <style type="text/css">
+    #loading{
+      position: relative;
+      background-color: #E2E2E2;
+      top: 50%;
+      left: 50%;
+      margin-right: -50%;
+      transform: translate(-50%, -50%)  
+    }
+  </style>
 
 </head>
 
 <!--height iPad = 768px - 20px status bar. If statys bar= black-transparent, hieght = full 768px-->
 <body style="height:748px">
+<!--to show something while the stuff is loading
+    to edit the settings easily, go to http://spin.js.org and change the parameters-->
+  <div id="loading" style="height:748px; width:1024px">
+    <script>
+      var opts = {
+          lines: 13 // The number of lines to draw
+        , length: 28 // The length of each line
+        , width: 14 // The line thickness
+        , radius: 42 // The radius of the inner circle
+        , scale: 1 // Scales overall size of the spinner
+        , corners: 1 // Corner roundness (0..1)
+        , color: '#FFF' // #rgb or #rrggbb or array of colors
+        , opacity: 0.25 // Opacity of the lines
+        , rotate: 0 // The rotation offset
+        , direction: 1 // 1: clockwise, -1: counterclockwise
+        , speed: 1 // Rounds per second
+        , trail: 60 // Afterglow percentage
+        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+        , zIndex: 2e9 // The z-index (defaults to 2000000000)
+        , className: 'spinner' // The CSS class to assign to the spinner
+        , top: '50%' // Top position relative to parent
+        , left: '50%' // Left position relative to parent
+        , shadow: false // Whether to render a shadow
+        , hwaccel: false // Whether to use hardware acceleration
+        , position: 'absolute' // Element positioning
+      }
+      var target = document.getElementById('loading') //add to the div
+      var spinner = new Spinner(opts).spin(target);
+    </script>
+  </div>
+
+  <!-- the grid div where all the photos go-->
   <div class="grid"></div>
   
   <!-- script for photo collaging effect-->

@@ -182,7 +182,7 @@ function getRandomDiv(o) {
 	console.log(randomInt);
 	switch(o){
 		case "portrait":
-			if(randomInt <= 75){
+			if(randomInt <= 50){
 				return ({width: "", height: "498px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
@@ -191,7 +191,7 @@ function getRandomDiv(o) {
 			break;
 		case "portrait_w-h-flip":
 			//NB w and h are the other way around!
-			if(randomInt <= 75){
+			if(randomInt <= 50){
 				return ({width: "", height: "332px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
@@ -199,7 +199,7 @@ function getRandomDiv(o) {
 			}
 			break;
 		case "landscape":
-			if(randomInt <= 75){
+			if(randomInt <= 50){
 			return ({width: "664px", height: "", imageClass: "grid-item--land-big", imageOrientation: "landscape"});
 			}
 			else{
@@ -239,6 +239,9 @@ jQuery.getJSON('/files/'+ userID+'/images', function(data){
 			 	//var $photoItem = getItemSize($photoDiv);
 			 
 			 	//photoArray.push( $photoItem );
+
+			 	//hide the spinning loading unit
+			 	$("#loading").hide();
 			 
 			 	// append items to grid
 			 	$grid.append( $photoDiv )

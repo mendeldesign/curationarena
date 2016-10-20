@@ -22,7 +22,16 @@ var $grid = $('.grid').isotope({
 // Socket.io functionality for sending photos
 var socket = io("");
 
-//var userID = jQuery.url.param("userid");
+function gup(name){
+	name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+	var regexS = "[\\?&]"+name+"=([^&#]*)";
+	var regex = new RegExp( regexS );
+	var results = regex.exec( window.location.href );
+	if( results == null )
+		return "";
+	else
+		return results[1];
+};
 
 //determine the size of the div, based on the meta data from the json.
 function getImageDiv(w,h,o, callback){   
@@ -211,7 +220,7 @@ function getRandomDiv(o) {
 
 //eerst alle photos in een array duwen om de volgorde te bewaren?
 //var photoArray = new Array();
-var userID = "Mendel";
+var userID = gup("userid");
 jQuery.getJSON('/files/'+ userID+'/images', function(data){
 //jQuery.getJSON('./images/photos_A/photosEXIFtest.json', function(data){
 	$.each(data.photos, function (i, f) {

@@ -20,8 +20,11 @@ var app = express();
 // [MJB] Added for Socket.io
 var io = socket_io();
 app.io = io;
-
 var routes = require('./routes/index')(io);
+
+//custom namespace
+var ioLoader = io.of('/json-loader');
+app.ioLoader = ioLoader;
 
 // view engine setup >> MJB: IN MY CASE NO VIEW ENGINE, JUST PLANE STATIC HTML
 //app.set('views', path.join(__dirname, 'views'));

@@ -44,6 +44,9 @@ imageService.loadImagesOnStart(function(err){
 var io     = app.io;
 io.attach(server);
 
+//custom namespace for loading the images
+var ioLoader = io.of('/json-loader');
+
 /**
  * Normalize a port into a number, string, or false.
  */

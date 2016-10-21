@@ -30,5 +30,22 @@ module.exports = function(io) {
     		//console.log('iPad disconnected');
   		}); 
     });
+
+    //this handles the "chat" when the imgaes are loaded
+    var ioLoader = io.of("/json-loader");
+    //for the other socket
+    ioLoader.on('connection', function(socket) { 
+      //log when a user is connected
+      console.log('connection with JSON');
+    
+      //when receiving a message
+      socket.on('chat message', function(loadingDone){
+        console.log('loading status ' + loadingDone);
+
+        //broadcast the message to the other people
+        ioLoader.emit('chat message', loadingDone);
+      });
+    });
+
     return router;
-}
+};

@@ -15,6 +15,8 @@
 <link href="images/splash_iphone_2x.png" rel="apple-touch-startup-image" sizes="640x960" media="(device-height: 480px)">-->
 
 <script type="text/javascript" src="javascripts/web-app-links.js"></script>
+<script type="text/javascript" src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+   <script type="text/javascript" src="javascripts/spin.js"></script>
 
 <style type="text/css">
 body {
@@ -27,6 +29,15 @@ position: absolute;
     margin-right: -50%;
     transform: translate(-50%, -50%)	
 }
+/*the loading spin*/
+#loading{
+  position: absolute;
+  background-color: #E2E2E2;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)  
+}
 </style>
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -38,7 +49,7 @@ position: absolute;
 
 <body>
 
-<div align="center">
+<div id="home" align="center">
 <a href="index.html"><img src="images/home-button.png" width="100" height="100" alt=""/></a>
 </div>
 
@@ -47,5 +58,65 @@ position: absolute;
 &nbsp;&nbsp;&nbsp;&nbsp;
 <a href="ipad-view.html?userid=user_B"><img src="images/Login-B.png" width="280" height="280" alt=""/></a>
 </div>
+
+ <div id="loading" style="height:400px; width:1024px">
+	<script>
+
+		/*to show something while the stuff is loading
+		 *to edit the settings easily, go to http://spin.js.org and change the parameters
+		 */
+
+		var opts = {
+			  lines: 13 // The number of lines to draw
+			, length: 28 // The length of each line
+			, width: 14 // The line thickness
+			, radius: 42 // The radius of the inner circle
+			, scale: 1 // Scales overall size of the spinner
+			, corners: 1 // Corner roundness (0..1)
+			, color: '#FFF' // #rgb or #rrggbb or array of colors
+			, opacity: 0.25 // Opacity of the lines
+			, rotate: 0 // The rotation offset
+			, direction: 1 // 1: clockwise, -1: counterclockwise
+			, speed: 1 // Rounds per second
+			, trail: 60 // Afterglow percentage
+			, fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+			, zIndex: 2e9 // The z-index (defaults to 2000000000)
+			, className: 'spinner' // The CSS class to assign to the spinner
+			, top: '50%' // Top position relative to parent
+			, left: '50%' // Left position relative to parent
+			, shadow: false // Whether to render a shadow
+			, hwaccel: false // Whether to use hardware acceleration
+			, position: 'absolute' // Element positioning
+		}
+		var target = document.getElementById('loading') //add to the div
+		var spinner = new Spinner(opts).spin(target);
+	</script>
+
+</div>
+
+<script>
+	//var socket = io();
+	var loader = io("/json-loader");
+
+	//test if the namespace works
+	//loader.emit('chat message', true);
+
+	//listen when the loader is reade:
+	loader.on('chat message', function(loaded){
+		//test if the namespace works
+		console.log(loaded);
+
+		if(loaded == false){
+			console.log("loading done!");
+			document.getElementById("loading").style.display = "none";
+		}
+		else{
+			document.getElementById("loading").style.display = "";
+			console.log("loading...");
+		}
+	});
+
+</script>
+
 </body>
 </html>

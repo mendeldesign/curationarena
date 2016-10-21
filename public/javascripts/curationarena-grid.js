@@ -50,8 +50,13 @@ function getImageDiv(w,h,o, callback){
 	}
 	//portrait panoramas
 	else if (h > (1.5 * w)){
-		//params = {width:"332px", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
-		params = {width:"", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
+		if (h > (2 * w)){
+			//params = {width:"332px", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
+			params = {width:"249px", height:"", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
+		}
+		else{
+			params = {width:"", height:"498px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
+		}
 	}	
 	else{
 		/*
@@ -158,8 +163,16 @@ function getImageDiv(w,h,o, callback){
 				else if(w < h){
 					params = getRandomDiv("portrait");
 				}
-				else
-					params = getRandomDiv("landscape");
+				else{
+					//landscape photos with a ratio smaller than 4:3
+					if(w > (1.4 * h)){
+						params = {width: "", height: "249px", imageClass: "", imageOrientation: "landscape"};
+					}
+					//all other landscape photos
+					else{
+						params = getRandomDiv("landscape");
+					}
+				}
 
 				break;
 			default: params = getRandomDiv("landscape");
@@ -191,7 +204,7 @@ function getRandomDiv(o) {
 	console.log(randomInt);
 	switch(o){
 		case "portrait":
-			if(randomInt <= 50){
+			if(randomInt <= 10){
 				return ({width: "", height: "498px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
@@ -200,7 +213,7 @@ function getRandomDiv(o) {
 			break;
 		case "portrait_w-h-flip":
 			//NB w and h are the other way around!
-			if(randomInt <= 50){
+			if(randomInt <= 10){
 				return ({width: "", height: "332px", imageClass: "grid-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
@@ -208,7 +221,7 @@ function getRandomDiv(o) {
 			}
 			break;
 		case "landscape":
-			if(randomInt <= 50){
+			if(randomInt <= 10){
 			return ({width: "664px", height: "", imageClass: "grid-item--land-big", imageOrientation: "landscape"});
 			}
 			else{
@@ -250,7 +263,9 @@ jQuery.getJSON('/files/'+ userID+'/images', function(data){
 			 	//photoArray.push( $photoItem );
 
 			 	//hide the spinning loading unit
-			 	$("#loading").hide();
+			 	if(($("#loading").hide()) == false){
+			 		$("#loading").hide();
+			 	};
 			 
 			 	// append items to grid
 			 	$grid.append( $photoDiv )
@@ -262,7 +277,7 @@ jQuery.getJSON('/files/'+ userID+'/images', function(data){
 				 //console.log(f.url +" id = " + f.id);
 			
 			//});
-			//img.src = f.path;
+			//img.src = f.url;
 		});
 
 	});
@@ -274,6 +289,8 @@ jQuery.getJSON('/files/'+ userID+'/images', function(data){
 $grid.on( 'click', '.grid-item', function() {
   //console.log($(this).hasClass("item--selected"));
   //toggle selector
+
+//var original = attribute "orig" / or "id"?
 
   var url = $(this).children([0]).attr("src");
   var w = $(this).children([0]).attr("width");

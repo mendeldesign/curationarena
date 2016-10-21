@@ -25,13 +25,26 @@
     
     <script>
       var socket = io();
+      var loader = io("/json-loader");
       $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
+        //socket.emit('chat message', $('#m').val());
+
+        //test if the namespace works        
+        if (($('#m').val()) == "false") {
+          loader.emit('chat message', false);
+        }
+        else{
+          loader.emit('chat message', $('#m').val());
+        }
+
         $('#m').val('');
         return false;
       });
       socket.on('chat message', function(selected, url, w, h, gridItemClass, imageOrientation){
         $('#messages').append($('<li>').text(selected +" "+ url +" "+ w +" "+ h  +" itemclass "+gridItemClass+" orientation "+ imageOrientation));
+      });
+      loader.on('chat message', function(loaded){
+        $('#messages').append($('<li>').text("stuff loaded: "+loaded));
       });
 
     </script>

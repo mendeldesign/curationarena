@@ -76,4 +76,9 @@ app.use(function(err, req, res, next) {
   });
 });
 
+var imageService = require('../services/imageService');
+imageService.loadImagesOnStart(function(err){
+  if(err) logger.error(err);
+});
+
 module.exports = app;

@@ -258,7 +258,7 @@ jQuery.getJSON('/files/'+ userID+'/images', function(data){
 			//pre-loader doe not work because the smaller items are loaded faster
 			//var img = new Image();
 			//$(img).on('load', function(){
-				var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.url+" width='" + params.width +"'height='" + params.height +"' class='" + params.imageOrientation +"' id'"+ f.url +"'/></div>");
+				var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.thumbnail_url+" width='" + params.width +"'height='" + params.height +"' class='" + params.imageOrientation +"' id='"+ f.url +"'/></div>");
 				//var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.path+" class='" + params.imageOrientation +"'/></div>");
 			 	//var $photoItem = getItemSize($photoDiv);
 			 
@@ -295,7 +295,8 @@ $grid.on( 'click', '.grid-item', function() {
 //var original = attribute "orig" / or "id"?
 
 
-  var url = $(this).children([0]).attr("src"); //ULR of the original size. Source (src = thumbnail)
+  var url = $(this).children([0]).attr("id"); //ULR of the original size.
+	// ("src" = thumbnail_url)
   var w = $(this).children([0]).attr("width");
   var h = $(this).children([0]).attr("height");
   var gridItemClass = $(this).attr("class");

@@ -1,6 +1,6 @@
 /*	SCRIPT: curationarena-Arena-grid.js
 	Curation Arena Prototype
-	version Oktober 18 2016
+	version Oktober 22 2016
 	created by Mendel Broekhuijsen & Jesús Muñoz Alcantara
 
 	EXTERNAL JS: isotope.pkgd.js, masonry-horizontal.js, 
@@ -41,7 +41,13 @@ function getImageDiv(w,h,o, callback){
 			params = {width:"", height:"399px", imageClass:"arena-item--pano", imageOrientation: "panorama"};
 			break;
 		case "port-pano":
-			params = {width:"", height:"1197px", imageClass:"arena-item--port-pano", imageOrientation:"port-pano"};
+			if (h > (2 * w)){
+				//params = {width:"332px", height:"747px", imageClass:"grid-item--port-pano", imageOrientation:"port-pano"};
+				params = {width:"249px", height:"", imageClass:"arena-item--port-pano", imageOrientation:"port-pano"};
+			}
+			else{
+				params = {width:"", height:"798px", imageClass:"arena-item--port-pano", imageOrientation:"port-pano"};
+			}
 			break;
 		case "portrait rotate90":
 		case "portrait ios-rotate90":  
@@ -90,40 +96,42 @@ function getImageDiv(w,h,o, callback){
 			break;
 		case "portrait rotate270":
 		case "portrait ios-rotate270":
-			//if photo is too small
-			if(w < 498){
-				//iOS safari does the rotation by itself
-				if (iOS == true) {
-					params = {width: "", height: "399px", imageClass: "arena-item--port-small", imageOrientation: "portrait"};
-				}
-				else{
-					//NB w and h are the other way around!
-					params = {width: "", height: "266px", imageClass: "arena-item--port-small", imageOrientation: "portrait rotate270"};
-				}
+			if(iOS == true){
+				params = getRandomDiv("portrait");
 			}
 			else{
-				if(iOS == true){
-					params = getRandomDiv("portrait");
-				}
-				else{
-					params = getRandomDiv("portrait_w-h-flip");
-					params.imageOrientation += " rotate270";				
-				}
+				params = getRandomDiv("portrait_w-h-flip");
+				params.imageOrientation += " rotate270";				
 			}
 			break;
-		case "Horizontal (normal)":
-			//if photo is too small
-			if(w < 664){
-				params = {width: "532px", height: "", imageClass: "arena-item--land-small", imageOrientation: "landscape"};
+		//if photo is too small
+		case "portrait rotate270 mini":
+		case "portrait ios-rotate270 mini":
+			//iOS safari does the rotation by itself
+			if (iOS == true) {
+				params = {width: "", height: "399px", imageClass: "arena-item--port-small", imageOrientation: "portrait"};
 			}
-			else
-				params = getRandomDiv("landscape");
-
+			else{
+				//NB w and h are the other way around!
+				params = {width: "", height: "266px", imageClass: "arena-item--port-small", imageOrientation: "portrait rotate270"};
+			}
+			break;
+		//if photo is too small
+		case "landscape mini":
+			params = {width: "532px", height: "", imageClass: "arena-item--land-small", imageOrientation: "landscape"};
+			break;
+		//for photos with an aspect ratio bigger than 4:3 (all DSLR)
+		case "landscape 4-3":
+			params = getRandomDiv("landscape 4-3");
+			break;
+		//all other landscape photos
+		case "landscape":
+			params = getRandomDiv("landscape");
 			break;
 		case "portrait":
-			//if photo is too small
 			params = getRandomDiv("portrait");
 			break;
+		//if photo is too small
 		case "portrait mini":
 			params = {width: "", height: "532px", imageClass: "arena-item--port-small", imageOrientation: "portrait"};
 			break;
@@ -138,10 +146,10 @@ function getImageDiv(w,h,o, callback){
 
 function getRandomDiv(o) {
 	var randomInt = Math.floor(Math.random() * 100);
-	console.log(randomInt);
+	//console.log(randomInt);
 	switch(o){
 		case "portrait":
-			if(randomInt <= 75){
+			if(randomInt <= 50){
 				return ({width: "", height: "798px", imageClass: "arena-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
@@ -150,7 +158,7 @@ function getRandomDiv(o) {
 			break;
 		case "portrait_w-h-flip":
 			//NB w and h are the other way around!
-			if(randomInt <= 75){
+			if(randomInt <= 50){
 				return ({width: "", height: "532px", imageClass: "arena-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
@@ -158,11 +166,19 @@ function getRandomDiv(o) {
 			}
 			break;
 		case "landscape":
-			if(randomInt <= 75){
+			if(randomInt <= 50){
 			return ({width: "1064px", height: "", imageClass: "arena-item--land-big", imageOrientation: "landscape"});
 			}
 			else{
 				return ({width: "532px", height: "", imageClass: "arena-item--land-small", imageOrientation: "landscape"});
+			}
+			break;
+		case "landscape 4-3":
+			if(randomInt <= 50){
+			return ({width: "", height: "798", imageClass: "arena-item--land-big", imageOrientation: "landscape"});
+			}
+			else{
+				return ({width: "", height: "399", imageClass: "arena-item--land-small", imageOrientation: "landscape"});
 			}
 			break;
 	}

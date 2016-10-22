@@ -14,7 +14,7 @@ var imageService = {};
 //var pathUserA = "/Users/jmunoza/wee/workspace/curationarena/public/images/photos_A";
 //var pathUserB= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
   //"Prototype/curationarena/public/images/photos_A";
-var pathUserA = "/Users/Mendel/Desktop/photos_A-2";
+var pathUserA = "/Users/Mendel/Desktop/photos_A";
 var pathUserB = "/Users/Mendel/Desktop/photos_A-2";
 
 var userFiles = [

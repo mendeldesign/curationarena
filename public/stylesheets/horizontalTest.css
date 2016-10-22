@@ -95,7 +95,7 @@ body { background-color: black; margin: 0 0 0 0; }
 
 .grid-item--port-pano {
 	width: 249px; /*grid row*/
-	height: 498px; /*grid row x 3*/
+	height: 498px; /*grid row x 2*/
 }
 .grid-item--port-pano img {max-height: 100%; max-width: none;}
 
@@ -203,14 +203,14 @@ body { background-color: black; margin: 0 0 0 0; }
 
 /* ----panorama ---*/
 .arena-item--pano {
-  width: 1064px;/*grid row-width x 2*/
+  width: 798px;/*grid width x 2*/ 
   height: 399px;/*grid row*/
 }
 .arena-item--pano img {max-width: none; max-height: 100%;}
 
 .arena-item--port-pano {
-  width: 532px; /*grid row-width*/
-  height: 1197px; /*grid row x 3*/
+  width: 399px; /*grid row*/
+  height: 798px; /*grid row x 2*/
 }
 .arena-item--port-pano img {max-height: 100%; max-width: none;}
 

@@ -38,6 +38,10 @@ position: absolute;
   margin-right: -50%;
   transform: translate(-50%, -50%)  
 }
+/*class hidden*/
+.hidden{
+	display: none;
+}
 </style>
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -49,7 +53,7 @@ position: absolute;
 
 <body>
 
-<div id="home" align="center">
+<div id="home" align="center" class="hidden">
 <a href="index.html"><img src="images/home-button.png" width="100" height="100" alt=""/></a>
 </div>
 
@@ -59,7 +63,7 @@ position: absolute;
 <a href="ipad-view.html?userid=user_B"><img src="images/Login-B.png" width="280" height="280" alt=""/></a>
 </div>
 
- <div id="loading" style="height:400px; width:1024px">
+ <div id="loading" style="height:748px; width:1024px">
 	<script>
 
 		/*to show something while the stuff is loading
@@ -105,13 +109,15 @@ position: absolute;
 	loader.on('chat message', function(loaded){
 		//test if the namespace works
 		console.log(loaded);
-
+		
 		if(loaded == false){
 			console.log("loading done!");
-			document.getElementById("loading").style.display = "none";
+			document.getElementById("home").className = "";
+			document.getElementById("loading").className = "hidden";
+			//document.getElementById("loading").style.display = "none";
 		}
 		else{
-			document.getElementById("loading").style.display = "";
+			document.getElementById("loading").className = "";
 			console.log("loading...");
 		}
 	});

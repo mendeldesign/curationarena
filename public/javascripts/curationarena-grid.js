@@ -1,6 +1,6 @@
 /*	SCRIPT: curationarena-grid.js
 	Curation Arena Prototype
-	version Oktober 18 2016
+	version Oktober 22 2016
 	created by Mendel Broekhuijsen & Jesús Muñoz Alcantara
 
 	EXTERNAL JS: isotope.pkgd.js, masonry-horizontal.js, 
@@ -76,7 +76,7 @@ function getImageDiv(w,h,o, callback){
 			//rotated portrait
 			case "Rotate 90 CW":  
 				//rotate
-				console.log("image orientation is 90 CW!");
+				//console.log("image orientation is 90 CW!");
 				//if rotated portrait is too small
 				if(w < 498){
 					//iOS safari does the rotation by itself
@@ -160,13 +160,15 @@ function getImageDiv(w,h,o, callback){
 						params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape mini"};
 					}
 				}
+				//if photo is not too small, still portrait with landscape tag
 				else if(w < h){
 					params = getRandomDiv("portrait");
 				}
 				else{
 					//landscape photos with a ratio smaller than 4:3
 					if(w > (1.4 * h)){
-						params = {width: "", height: "249px", imageClass: "", imageOrientation: "landscape"};
+						console.log("landscape 4-3 should apply");
+						params = {width: "", height: "249px", imageClass: "", imageOrientation: "landscape 4-3"};
 					}
 					//all other landscape photos
 					else{
@@ -201,7 +203,7 @@ function getItemSize(i) {
 
 function getRandomDiv(o) {
 	var randomInt = Math.floor(Math.random() * 100);
-	console.log(randomInt);
+	//console.log(randomInt);
 	switch(o){
 		case "portrait":
 			if(randomInt <= 10){
@@ -238,7 +240,7 @@ jQuery.getJSON('/files/'+ userID+'/images', function(data){
 //jQuery.getJSON('./images/photos_A/photosEXIFtest.json', function(data){
 	$.each(data.photos, function (i, f) {
 		
-		console.log(f.width + " "+f.height);
+		//console.log(f.width + " "+f.height);
 		
 		var w = parseInt(f.width, 10);
 		var h = parseInt(f.height, 10);
@@ -256,16 +258,16 @@ jQuery.getJSON('/files/'+ userID+'/images', function(data){
 			//pre-loader doe not work because the smaller items are loaded faster
 			//var img = new Image();
 			//$(img).on('load', function(){
-				var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.url+" width='" + params.width +"'height='" + params.height +"' class='" + params.imageOrientation +"'/></div>");
+				var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.url+" width='" + params.width +"'height='" + params.height +"' class='" + params.imageOrientation +"' id'"+ f.url +"'/></div>");
 				//var $photoDiv = $("<div class='grid-item "+ params.imageClass + "'><img src="+f.path+" class='" + params.imageOrientation +"'/></div>");
 			 	//var $photoItem = getItemSize($photoDiv);
 			 
 			 	//photoArray.push( $photoItem );
 
 			 	//hide the spinning loading unit
-			 	if(($("#loading").hide()) == false){
-			 		$("#loading").hide();
-			 	};
+			 	//if(($("#loading").hide()) == false){
+			 	$("#loading").remove();
+			 	//	};
 			 
 			 	// append items to grid
 			 	$grid.append( $photoDiv )
@@ -292,7 +294,8 @@ $grid.on( 'click', '.grid-item', function() {
 
 //var original = attribute "orig" / or "id"?
 
-  var url = $(this).children([0]).attr("src");
+
+  var url = $(this).children([0]).attr("src"); //ULR of the original size. Source (src = thumbnail)
   var w = $(this).children([0]).attr("width");
   var h = $(this).children([0]).attr("height");
   var gridItemClass = $(this).attr("class");

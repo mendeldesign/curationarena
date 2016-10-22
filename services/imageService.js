@@ -263,7 +263,7 @@ imageService.getImagesForUser = function getImagesForUser(userId,cb) {
 
 };
 
-imageService.loadImagesOnStart = function loadImagesOnStart(cb){
+imageService.loadImagesOnStart = function loadImagesOnStart(ioLoader, cb){
   var context = this;
   var i = 0;
   userFiles.forEach(function (user){
@@ -276,13 +276,16 @@ imageService.loadImagesOnStart = function loadImagesOnStart(cb){
           
         if(i==2){
           console.log(i);
-          //initite:
-          var io = require( "socket.io" );
-          var socket = io();
-          var loader = io("/json-loader");
-    
-          //when loading of images is in progress:
-          loader.emit('chat message', false);
+ 
+    //for the other socket
+    //ioLoader.on('connection', function(socket) { 
+      //log when a user is connected
+      console.log('connection with JSON');
+
+
+        //broadcast the message to the other people
+        ioLoader.emit('chat message', false);
+    //});
           i = 0;
         }
       }

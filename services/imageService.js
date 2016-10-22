@@ -12,8 +12,8 @@ var imageService = {};
 //  "Prototype/curationarena/public/images/photos_A";
 //var pathUserB= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
 //  "Prototype/curationarena/public/images/photos_B";
-var pathUserA = "/Users/Mendel/Desktop/photos_A";
-var pathUserB = "/Users/Mendel/Desktop/photos_A-2";
+var pathUserA = "/Users/Mendel/Desktop/photos_A-2/Test";
+var pathUserB = "/Users/Mendel/Desktop/photos_A-2/Test";
 
 var userFiles = [
   {
@@ -265,12 +265,26 @@ imageService.getImagesForUser = function getImagesForUser(userId,cb) {
 
 imageService.loadImagesOnStart = function loadImagesOnStart(cb){
   var context = this;
+  var i = 0;
   userFiles.forEach(function (user){
     context.loadImagesForUser(user.userId, user.path, function(err, images){
       if(!err) {
         logger.debug('Photos for user:' + user.userId + ' loaded successfully');
+        i++;
         user.json = user.json.concat(images);
         cb(null);
+          
+        if(i==2){
+          console.log(i);
+          //initite:
+          var io = require( "socket.io" );
+          var socket = io();
+          var loader = io("/json-loader");
+    
+          //when loading of images is in progress:
+          loader.emit('chat message', false);
+          i = 0;
+        }
       }
       else cb(err);
     });

@@ -70,7 +70,11 @@ function getImageDiv(w,h,o, callback){
 		8 = Rotate 270 CW
 		*/
 		//console.log(o);
-		var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+		//Because the thumbnails have no orientation data, the ipad does not automatically rotates them.
+		//the exif is still in the JSON, so the algorythm below still works for rotating them (as is needed on the mac)
+		//var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+		//Quick fix:
+		var iOS = false;
 
 		switch(o){
 			//rotated portrait

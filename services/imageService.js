@@ -97,7 +97,8 @@ var imageSchema = function imageSchema(userId, fileWithPath, fileName, directory
 imageService.processImageFromDir = function processImageFromDir(userId, path, cb) {
   var images = [];
   var fs = require("fs");
-  logger.verbose('[imageService.processImageFromDir] Loading images, path: ' + path);
+  logger.verbose('[imageService.processImageFromDir] Loading images ' + userId +
+    ' : '  + path);
   fs.readdir(path, function(err, files) {
     var filePath = path;
     if(filePath.indexOf('/', filePath.length - 1) == -1) filePath += '/';
@@ -146,8 +147,8 @@ imageService.loadExifData = function loadExifData (images, cb){
        */
       var exiftool = require('exif2');
       // done in series.
-      var everySeries = require('async').everySeries;
-      everySeries(images, function(image, cb1) {
+      var every = require('async').everyLimit;
+      every(images, 2, function(image, cb1) {
         exiftool(image.path, function(err, exifMetadata){
           if (!err) {
             //logger.verbose('exif data loaded successfully: ' + image.path);
@@ -234,6 +235,8 @@ imageService.loadExifData = function loadExifData (images, cb){
                 image.thumbnail_url = "/files/" + image.user + "/images/" + encodeURIComponent(newPathToFile);
                 image.thumbnail_path = newPathToFile;
                 imagesWithExif.push(image);
+                logger.debug('Loading images ' + image.user + ' : '
+                  + imagesWithExif.length + '/' + images.length);
                 cb1(null, true);
               }
             });
@@ -263,35 +266,29 @@ imageService.getImagesForUser = function getImagesForUser(userId,cb) {
 
 };
 
-imageService.loadImagesOnStart = function loadImagesOnStart(ioLoader, cb){
+imageService.loadImagesOnStart = function loadImagesOnStart(cb){
   var context = this;
-  var i = 0;
-  userFiles.forEach(function (user){
-    context.loadImagesForUser(user.userId, user.path, function(err, images){
-      if(!err) {
-        logger.debug('Photos for user:' + user.userId + ' loaded successfully');
-        i++;
-        user.json = user.json.concat(images);
-        cb(null);
-          
-        if(i==2){
-          console.log(i);
- 
-    //for the other socket
-    //ioLoader.on('connection', function(socket) { 
-      //log when a user is connected
-      console.log('connection with JSON');
-
-
-        //broadcast the message to the other people
-        ioLoader.emit('chat message', false);
-    //});
-          i = 0;
+  var startTime = new Date().getTime();
+  var async = require('async');
+  async.every(userFiles, function(user, cb1){
+      context.loadImagesForUser(user.userId, user.path, function(err, images){
+        if(!err) {
+          var endTime = new Date().getTime();
+          logger.debug('[Success] Loading images ' + user.userId + ' : ' +
+            images.length + '/' + images.length  + ' -> ' + (endTime- startTime));
+          user.json = user.json.concat(images);
+          cb1(null, !err);
         }
-      }
-      else cb(err);
+        else cb1(err);
+      });
+    },
+    function(err, result){
+      if(!err) {
+        var endTime = new Date().getTime();
+        logger.info('[Success] Loading images finished: ' + (endTime- startTime));
+        cb(null);
+      } else cb(err);
     });
-  });
 };
 
 imageService.loadImagesForUser = function loadImagesForUser(user, path, cb) {
@@ -335,8 +332,6 @@ imageService.createThumbnailFromFile = function createThumbnailFromFile (pathToF
     throw 'At least one of width or height needs to be set';
   }
 
-  logger.verbose('[' + pathToFile + '] -> ' + targetWidth + 'x' + targetHeight);
-
   /**
    * Uses EyalAr/lwip : a Light-weight image processor for NodeJS
    * https://github.com/EyalAr/lwip
@@ -360,9 +355,6 @@ imageService.createThumbnailFromFile = function createThumbnailFromFile (pathToF
     } if (targetHeight === 0) {
       targetHeight = Math.round(targetWidth / targetRatio);
     }
-
-    logger.verbose('Original: ' + origWidth + 'x' + origHeight + ' ->' +
-      ' Target: ' + targetWidth + 'x' + targetHeight);
 
     if (targetRatio > origRatio) {
       // original image too high
@@ -399,7 +391,12 @@ imageService.createThumbnailFromFile = function createThumbnailFromFile (pathToF
       bottom = top + cropHeight - 1;
     }
 
-    logger.verbose('Crop dimensions: ' + cropWidth + 'x' + cropHeight + ' left: ' + left + ' right: ' + right + ' top: '+ top + ' bottom: ' + bottom);
+    //logger.verbose('Creating thumbnail [' + pathToFile + '] -> ' +
+    // pathToNewFile);
+    //logger.verbose('Original: ' + origWidth + 'x' + origHeight + ' ->' +
+    //  ' Target: ' + targetWidth + 'x' + targetHeight);
+    //logger.verbose('Crop dimensions: ' + cropWidth + 'x' + cropHeight + '
+    // left: ' + left + ' right: ' + right + ' top: '+ top + ' bottom: ' + bottom);
 
     image.batch()
       .crop(left, top, right, bottom)

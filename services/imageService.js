@@ -12,8 +12,8 @@ var imageService = {};
 //  "Prototype/curationarena/public/images/photos_A";
 //var pathUserB= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
 //  "Prototype/curationarena/public/images/photos_B";
-var pathUserA = "/Users/Mendel/Desktop/photos_A-2/Test";
-var pathUserB = "/Users/Mendel/Desktop/photos_A-2/Test";
+var pathUserA = "/Users/Mendel/Desktop/Outliers";
+var pathUserB = "/Users/Mendel/Desktop/Outliers";
 
 var userFiles = [
   {
@@ -273,19 +273,26 @@ imageService.loadImagesOnStart = function loadImagesOnStart(ioLoader, cb){
         i++;
         user.json = user.json.concat(images);
         cb(null);
-          
+        
+        //if both A and B are loaded
         if(i==2){
           console.log(i);
- 
-    //for the other socket
-    //ioLoader.on('connection', function(socket) { 
-      //log when a user is connected
-      console.log('connection with JSON');
+    
+          //log when a user is connected
+          console.log('connection with JSON');
 
+          //broadcast the message that loading is done
+          ioLoader.emit('chat message', false);
+   
+          //in case the receiving page was not loaded yet, the message did not come through and should be sent as soon as they connect
+          ioLoader.on('connection', function(socket) { 
+            //log when a user is connected
+            console.log('connection with JSON');
 
-        //broadcast the message to the other people
-        ioLoader.emit('chat message', false);
-    //});
+            //broadcast the message to the other people
+            ioLoader.emit('chat message', false);
+          });
+          //reset the timer for next time
           i = 0;
         }
       }

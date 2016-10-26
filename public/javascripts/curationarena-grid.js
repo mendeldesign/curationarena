@@ -37,7 +37,7 @@ function gup(name){
 function getImageDiv(w,h,o, callback){   
 	//var maxHeight = $(".grid").height();
 
-	var params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape"};
+	var params = {width: "332px", height: "", imageClass: "grid-item--land-small", imageOrientation: "landscape"};
 
 	//square images
 	if(Math.abs((w/h)-1) < 0.01){
@@ -110,11 +110,11 @@ function getImageDiv(w,h,o, callback){
 				if(w < 664){
 					//iOS safari does the rotation by itself
 					if (iOS == true) {
-						params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape ios-rotate180 mini"};
+						params = {width: "332px", height: "", imageClass: "grid-item--land-small", imageOrientation: "landscape ios-rotate180 mini"};
 					}
 					else{
 						//NB w and h are the other way around!
-						params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape rotate180 mini"};
+						params = {width: "332px", height: "", imageClass: "grid-item--land-small", imageOrientation: "landscape rotate180 mini"};
 					}
 				}
 				else{
@@ -158,10 +158,10 @@ function getImageDiv(w,h,o, callback){
 				if(w < 664){
 					//if tag is Horizontal (normal) but image is still portrait
 					if(w < h){
-						params = {width: "", height: "332px", imageClass: "", imageOrientation: "portrait mini"};
+						params = {width: "", height: "332px", imageClass: "grid-item--port-small", imageOrientation: "portrait mini"};
 					}
 					else{
-						params = {width: "332px", height: "", imageClass: "", imageOrientation: "landscape mini"};
+						params = {width: "332px", height: "", imageClass: "grid-item--land-small", imageOrientation: "landscape mini"};
 					}
 				}
 				//if photo is not too small, still portrait with landscape tag
@@ -172,7 +172,7 @@ function getImageDiv(w,h,o, callback){
 					//landscape photos with a ratio smaller than 4:3
 					if(w > (1.4 * h)){
 						console.log("landscape 4-3 should apply");
-						params = {width: "", height: "249px", imageClass: "", imageOrientation: "landscape 4-3"};
+						params = {width: "", height: "249px", imageClass: "grid-item--land-small", imageOrientation: "landscape 4-3"};
 					}
 					//all other landscape photos
 					else{
@@ -231,7 +231,7 @@ function getRandomDiv(o) {
 			return ({width: "664px", height: "", imageClass: "grid-item--land-big", imageOrientation: "landscape"});
 			}
 			else{
-				return ({width: "332px", height: "", imageClass: "", imageOrientation: "landscape"});
+				return ({width: "332px", height: "", imageClass: "grid-item--land-small", imageOrientation: "landscape"});
 			}
 			break;
 	}
@@ -293,67 +293,65 @@ jQuery.getJSON('/files/'+ userID+'/images', function(data){
 //---------------event listeners-------------------
 
 $grid.on( 'click', '.grid-item', function() {
-  //console.log($(this).hasClass("item--selected"));
-  //toggle selector
+	//console.log($(this).hasClass("item--selected"));
+	//toggle selector
 
-//var original = attribute "orig" / or "id"?
+	//var original = attribute "orig" / or "id"?
 
-
-  var url = $(this).children([0]).attr("id"); //ULR of the original size.
+	var url = $(this).children([0]).attr("id"); //ULR of the original size.
 	// ("src" = thumbnail_url)
-  var w = $(this).children([0]).attr("width");
-  var h = $(this).children([0]).attr("height");
-  var gridItemClass = $(this).attr("class");
-  var imageOrientation = $(this).children([0]).attr("class");
+	var w = $(this).children([0]).attr("width");
+	var h = $(this).children([0]).attr("height");
+	var gridItemClass = $(this).attr("class");
+	var imageOrientation = $(this).children([0]).attr("class");
 
-  //already create the div that will be sent to the other screen
-  //var $photoDiv = $("<div class='"+ gridItemClass + "'><img src="+url+" width='" + w +"'height='" + h +"' class='" + imageOrientation +"'/></div>")
+	//already create the div that will be sent to the other screen
+	//var $photoDiv = $("<div class='"+ gridItemClass + "'><img src="+url+" width='" + w +"'height='" + h +"' class='" + imageOrientation +"'/></div>")
 
+	if($(this).hasClass("item--selected") == true)
+	{
+		//send the URL to the other screen
+		socket.emit('chat message', false, url, w, h, gridItemClass, imageOrientation);// children([0]).attr("src"));
+		//remove item from the other screen:
+		console.log("deselected " + url);//children([0]).attr("src")); 
 
-  if($(this).hasClass("item--selected") == true)
-  {
- 	//send the URL to the other screen
-	socket.emit('chat message', false, url, w, h, gridItemClass, imageOrientation);// children([0]).attr("src"));
-	  //remove item from the other screen:
-	  console.log("deselected " + url);//children([0]).attr("src")); 
-
-	  // toggle the class of the item to show/hide visibility on the screen
-	  $( this ).removeClass("item--selected");
-	  //re-layout
-	  $grid.isotope();  
+		// toggle the class of the item to show/hide visibility on the screen
+		$( this ).removeClass("item--selected");
+		//re-layout
+		$grid.isotope();  
 	}
 
 	else if($(this).hasClass("item--selected") == false)
 	{
-	  //send the URL to the other screen
-	  socket.emit('chat message', true, url, w, h, gridItemClass, imageOrientation);
-	 
-	  //send this item to the other screen:
-	  console.log("selected " +  url); 
+		//send the URL to the other screen
+		socket.emit('chat message', true, url, w, h, gridItemClass, imageOrientation);
 
-	  // toggle the class of the item to show/hide visibility on the screen
-	  $(this).addClass("item--selected"); 
-	  
-	  //add selection item -- Werkt Niet tot nu toe!
-	  /*var check = new Image();
-	  check.src = "http://i.stack.imgur.com/X9Xth.png";
-	  $( this ).add(check);
-	  */
-	  
-	  //toggle size
-	  /*
-	  if($(this).children([0]).attr("id") == "portrait"){
-		  $(this).toggleClass("grid-item--port-big");
-	  }
-	  if($(this).children([0]).attr("id") == "landscape"){
-		  $(this).toggleClass("grid-item--land-big");
-	  }
-	  */
+		//send this item to the other screen:
+		console.log("selected " +  url); 
 
-	  //to remove the item straight away:
-	  //$( this ).remove();
-	  
-	  //re-layout.
-	  $grid.isotope();
+		// toggle the class of the item to show/hide visibility on the screen
+		$(this).addClass("item--selected"); 
+		  
+		//add selection item -- Werkt Niet tot nu toe!
+		/*var check = new Image();
+		check.src = "http://i.stack.imgur.com/X9Xth.png";
+		$( this ).add(check);
+		*/
+		  
+		//toggle size
+		/*
+		if($(this).hasClass("grid-item--port-small") == true){
+			$(this).removeClass("grid-item--port-small");
+			$(this).addClass("grid-item--port-big");
+		}
+		if($(this).children([0]).attr("class") == "landscape"){
+			$(this).toggleClass("grid-item--land-big");
+		}
+		*/
+		//to remove the item straight away:
+		//$( this ).remove();
+		  
+		//re-layout.
+		$grid.isotope();
 	}
 });

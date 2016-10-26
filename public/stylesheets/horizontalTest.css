@@ -62,14 +62,24 @@ body { background-color: black; margin: 0 0 0 0; }
   display:block;
   vertical-align: middle;
   max-width: none;
-  max-height: 100%;
+  max-height: none;
 }
+
+.grid-item--land-small{
+  width: 332px; /*grid row-width*/
+  height: 249px;/*grid row*/
+}
+
+/*NBNBNB hier gaat nog wat mis, want de >4:3 passen niet lekker als ze geselecteerd zijn;*/
+.grid-item--land-small img { max-width: 100%; max-height: none;}
 
 /* ----landscape big ---*/
 .grid-item--land-big { 
 	width: 664px;
- 	height: 498px; 
+ 	height: 498px;
 }
+
+.grid-item--land-big img { max-width: 100%; max-height: none;}
 
 /* ----portrait small ---*/
 .grid-item--port-small { 
@@ -112,6 +122,10 @@ body { background-color: black; margin: 0 0 0 0; }
 	border: 15px solid #FFF;	
 	/*opacity: 0.4;*/
 }
+/*
+#portrait{ max-height: 100%; }
+#landscape{ max-width: 100%; }
+*/
 
 /* 
  * Rotations thanks to https://gist.github.com/mbonaci/9911390
@@ -185,6 +199,7 @@ body { background-color: black; margin: 0 0 0 0; }
   width: 1064px; /*grid row-width *2*/
   height: 798px; /*grid row x 2*/ 
 }
+.arena-item--land-big img { max-width: 100%; max-height: none;}
 
 /* ----portrait small ---*/
 .arena-item--port-small { 

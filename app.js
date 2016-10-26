@@ -76,9 +76,22 @@ app.use(function(err, req, res, next) {
   });
 });
 
+/**
+ * load images at start
+ * @type {*}
+ */
 var imageService = require('./services/imageService');
-imageService.loadImagesOnStart(ioLoader, function(err){
+imageService.loadImagesOnStart(function(err){
   if(err) logger.error(err);
+  else{
+    //broadcast the message to the ipads
+      logger.debug('Updating status connection with JSON');
+      ioLoader.emit('chat message', false);
+      ioLoader.on('connection', function(socket) { 
+      //broadcast the message to the other people
+      ioLoader.emit('chat message', false);
+    });
+  }
 });
 
 module.exports = app;

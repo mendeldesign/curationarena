@@ -111,7 +111,7 @@ imageService.processImageFromDir = function processImageFromDir(userId, path, cb
   });
 };
 
-imageService.loadExifData = function loadExifData (images, cb){
+imageService.loadExifDataBulkFolder = function loadExifDataBulkFolder (images, cb){
 
   var context = this;
   var imagesWithExif = [];
@@ -132,26 +132,35 @@ imageService.loadExifData = function loadExifData (images, cb){
     });
   };
 
-
+  var path = images[0].directory;
   var newPath = images[0].directory + THUMBNAIL_DIRECTORY;
   prepareNewPath(newPath, function(err){
     if(err){
       return cb(err);
     }
     else {
+
       /**
        * get exif
-       * https://github.com/tj/node-exif
+       * https://github.com/Yvem/node-exif
        * done in series because it calls exiftool via shell command and has to be
        * exif tool: http://www.sno.phy.queensu.ca/~phil/exiftool/
        */
       var exiftool = require('exif2');
-      // done in series.
-      var every = require('async').everyLimit;
-      every(images, 2, function(image, cb1) {
-        exiftool(image.path, function(err, exifMetadata){
-          if (!err) {
-            //logger.verbose('exif data loaded successfully: ' + image.path);
+
+      //load exif data of all the images in the folder
+      context.extractExifData(path, function(err, allExifMetadata){
+        if (!err) {
+          logger.verbose('exif data loaded successfully: ' + path);
+          //logger.verbose(allExifMetadata);
+          // done in series.
+          var every = require('async').everyLimit;
+          every(images, 2, function(image, cb1) {
+
+            var exifMetadata = allExifMetadata.find(function(imgData){
+              return imgData['FileName'] === image.name;
+            });
+
             /**
              *
              * 1 = Horizontal (normal)
@@ -164,8 +173,8 @@ imageService.loadExifData = function loadExifData (images, cb){
              * 8 = Rotate 270 CW
              *
              */
-            image.orientation = exifMetadata['orientation'];
-            var rotation = exifMetadata['rotation'] || exifMetadata['orientation'] || '1';
+            image.orientation = exifMetadata['Orientation'];
+            var rotation = exifMetadata['Rotation'] || exifMetadata['Orientation'] || '1';
             switch(rotation){
               case '1':
               case 'Horizontal (normal)':
@@ -205,8 +214,8 @@ imageService.loadExifData = function loadExifData (images, cb){
                 image.rotation = { index: '1', description: 'Horizontal (normal)'};
                 break;
             }
-            image.width = exifMetadata['image width'];
-            image.height = exifMetadata['image height'];
+            image.width = exifMetadata['ImageWidth'];
+            image.height = exifMetadata['ImageHeight'];
             /**
              * convert exifDate to normal date
              * https://github.com/briangershon/exif-date-to-iso
@@ -214,14 +223,164 @@ imageService.loadExifData = function loadExifData (images, cb){
             var moment = require('moment-timezone');
             var timeZone = moment.tz.guess();
             const exifDate = require('exif-date-to-iso');
-            image.original_time = exifDate.toISO(exifMetadata['date time original'], timeZone);
-            image.creation_time = exifDate.toISO(exifMetadata['create date'], timeZone);
-            image.modified_time = exifDate.toISO(exifMetadata['modify date'], timeZone);
-            image.access_time = exifDate.toISO(exifMetadata['file access date time'], timeZone);
-            image.file_type = exifMetadata['file type extension'];
-            image.mime_type = exifMetadata['mime type'];
-            image.bytes = exifMetadata['file size'];
-            image.size = exifMetadata['file size'];
+            image.original_time = exifDate.toISO(exifMetadata['DateTimeOriginal'], timeZone);
+            image.creation_time = exifDate.toISO(exifMetadata['CreateDate'], timeZone);
+            image.modified_time = exifDate.toISO(exifMetadata['ModifyDate'], timeZone);
+            image.access_time = exifDate.toISO(exifMetadata['FileAccessDate'], timeZone);
+            image.file_type = exifMetadata['FileType'];
+            image.file_type_extension = exifMetadata['FileTypeExtension'];
+            image.mime_type = exifMetadata['MIMEType'];
+            image.bytes = exifMetadata['FileSize'];
+            image.size = exifMetadata['FileSize'];
+
+            //create thumbnail
+            const THUMBNAIL_HEIGHT = 498;
+            var thumbnailPath = image.directory + THUMBNAIL_DIRECTORY + THUMBNAIL_NAME + image.name;
+            context.createThumbnailFromFile(image.path, thumbnailPath, 0,THUMBNAIL_HEIGHT, 'center', 'middle', function(err, newPathToFile) {
+              if(err) {
+                logger.error(err);
+                cb1(null, true); // to continue with other files
+              }
+              else {
+                image.thumbnail_url = "/files/" + image.user + "/images/" + encodeURIComponent(newPathToFile);
+                image.thumbnail_path = newPathToFile;
+                imagesWithExif.push(image);
+                logger.debug('Loading images ' + image.user + ' : '
+                  + imagesWithExif.length + '/' + images.length);
+                cb1(null, true);
+              }
+            });
+
+          }, function(err, result){
+            if(err) return cb(err);
+            else return cb(null,imagesWithExif);
+          });
+        }
+        else {
+          logger.error('Problem while reading exif data from path: ' + path, err);
+          cb(err); // to continue reading exifdata of other files
+        }
+      });
+    }
+  });
+};
+
+imageService.loadExifDataPerFile = function loadExifDataPerFile (images, cb){
+
+  var context = this;
+  var imagesWithExif = [];
+  const THUMBNAIL_DIRECTORY = 'THUMBNAILS/';
+  const THUMBNAIL_NAME = 'thumbnail_';
+
+  //function to check that the folder exists
+  var prepareNewPath = function prepareNewPath(newPath, cb0){
+    var fs = require("fs");
+    fs.access(newPath, function(err) {
+      if(err) {
+        fs.mkdir(newPath, function (err){
+          if(err) cb0(err);
+          else cb0(null);
+        });
+      }
+      else cb0(null);
+    });
+  };
+
+  var path = images[0].directory;
+  var newPath = images[0].directory + THUMBNAIL_DIRECTORY;
+  prepareNewPath(newPath, function(err){
+    if(err){
+      return cb(err);
+    }
+    else {
+      /**
+       * get exif
+       * https://github.com/Yvem/node-exif
+       * done in series because it calls exiftool via shell command and has to be
+       * exif tool: http://www.sno.phy.queensu.ca/~phil/exiftool/
+       */
+      var exiftool = require('exif2');
+      var exifParams = '-FileName -ImageHeight -ImageWidth -Rotation ' +
+        '-Orientation -DateTimeOriginal -CreateDate -ModifyDate -OffsetTime ' +
+        '-FileAccessDate -FileType -MIMEType';
+      // done in series.
+      var every = require('async').everyLimit;
+      every(images, 2, function(image, cb1) {
+        exiftool(path, exifParams, function(err, exifMetadata){
+          if (!err) {
+            //logger.verbose('exif data loaded successfully: ' + image.path);
+            logger.verbose(exifMetadata);
+            /**
+             *
+             * 1 = Horizontal (normal)
+             * 2 = Mirror horizontal
+             * 3 = Rotate 180
+             * 4 = Mirror vertical
+             * 5 = Mirror horizontal and rotate 270 CW
+             * 6 = Rotate 90 CW
+             * 7 = Mirror horizontal and rotate 90 CW
+             * 8 = Rotate 270 CW
+             *
+             */
+            image.orientation = exifMetadata['Orientation'];
+            var rotation = exifMetadata['Rotation'] || exifMetadata['Orientation'] || '1';
+            switch(rotation){
+              case '1':
+              case 'Horizontal (normal)':
+                image.rotation = { index: '1', description: 'Horizontal (normal)'};
+                break;
+              case '2':
+              case 'Mirror horizontal':
+                image.rotation = { index: '2', description: 'Mirror horizontal'};
+                break;
+              case '3':
+              case 'Rotate 180':
+                image.rotation = { index: '3', description: 'Rotate 180'};
+                break;
+              case '4':
+              case 'Mirror vertical':
+                image.rotation = { index: '4', description: 'Mirror vertical'};
+                break;
+              case '5':
+              case 'Mirror horizontal and rotate 270 CW':
+                image.rotation = { index: '5', description: 'Mirror horizontal' +
+                ' and rotate 270 CW'};
+                break;
+              case '6':
+              case 'Rotate 90 CW':
+                image.rotation = { index: '6', description: 'Rotate 90 CW'};
+                break;
+              case '7':
+              case 'Mirror horizontal and rotate 90 CW':
+                image.rotation = { index: '7', description: 'Mirror horizontal' +
+                ' and rotate 90 CW'};
+                break;
+              case '8':
+              case 'Rotate 270 CW':
+                image.rotation = { index: '8', description: 'Rotate 270 CW'};
+                break;
+              default:
+                image.rotation = { index: '1', description: 'Horizontal (normal)'};
+                break;
+            }
+            image.width = exifMetadata['ImageWidth'];
+            image.height = exifMetadata['ImageHeight'];
+            /**
+             * convert exifDate to normal date
+             * https://github.com/briangershon/exif-date-to-iso
+             */
+            var moment = require('moment-timezone');
+            var timeZone = moment.tz.guess();
+            const exifDate = require('exif-date-to-iso');
+            image.original_time = exifDate.toISO(exifMetadata['DateTimeOriginal'], timeZone);
+            image.creation_time = exifDate.toISO(exifMetadata['CreateDate'], timeZone);
+            image.modified_time = exifDate.toISO(exifMetadata['ModifyDate'], timeZone);
+            image.access_time = exifDate.toISO(exifMetadata['FileAccessDate'], timeZone);
+            image.file_type = exifMetadata['FileType'];
+            image.file_type_extension = exifMetadata['FileTypeExtension'];
+            image.mime_type = exifMetadata['MIMEType'];
+            image.bytes = exifMetadata['FileSize'];
+            image.size = exifMetadata['FileSize'];
 
             //create thumbnail
             const THUMBNAIL_HEIGHT = 498;
@@ -251,6 +410,24 @@ imageService.loadExifData = function loadExifData (images, cb){
         else return cb(null,imagesWithExif);
       });
     }
+  });
+};
+
+imageService.extractExifData = function extractExifData(path, cb){
+  var exec = require('child_process').exec;
+  var shellwords = require('shellwords');
+  var params = ' -FileName -ImageHeight -ImageWidth -Rotation ' +
+    '-Orientation -DateTimeOriginal -CreateDate -ModifyDate -OffsetTime ' +
+    '-FileAccessDate -FileType -MIMEType ';
+  var cmd = 'exiftool -json ' + shellwords.escape(String(path)) + params;
+  exec(cmd, function(err, str) {
+    if(err) {
+      if(err.message === 'stdout maxBuffer exceeded.')
+        err = new Error('Metadata too big !'); // convert to a clearer message
+      return cb(err);
+    }
+    var obj = JSON.parse(str); // so easy
+    cb(null, obj.length > 1 ? obj : obj[0]);
   });
 };
 
@@ -295,7 +472,7 @@ imageService.loadImagesForUser = function loadImagesForUser(user, path, cb) {
   var context = this;
   context.processImageFromDir(user,path, function(err, images){
     if(!err) {
-      context.loadExifData(images, function(err, images){
+      context.loadExifDataBulkFolder(images, function(err, images){
         //storedImages = storedImages.concat(images);
         images = images.sort(function(a,b){
           if(a.original_time < b.original_time) return -1;

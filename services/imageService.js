@@ -306,10 +306,9 @@ imageService.loadExifDataPerFile = function loadExifDataPerFile (images, cb){
       // done in series.
       var every = require('async').everyLimit;
       every(images, 2, function(image, cb1) {
-        exiftool(path, exifParams, function(err, exifMetadata){
+        exiftool(image.path, null, function(err, exifMetadata){
           if (!err) {
             //logger.verbose('exif data loaded successfully: ' + image.path);
-            logger.verbose(exifMetadata);
             /**
              *
              * 1 = Horizontal (normal)
@@ -472,10 +471,12 @@ imageService.loadImagesForUser = function loadImagesForUser(user, path, cb) {
   var context = this;
   context.processImageFromDir(user,path, function(err, images){
     if(!err) {
-      context.loadExifDataBulkFolder(images, function(err, images){
+      context.loadExifDataPerFile(images, function(err, images){
         //storedImages = storedImages.concat(images);
         images = images.sort(function(a,b){
-          if(a.original_time < b.original_time) return -1;
+          if(a.original_time === null) return -1;
+          else if(b.original_time === null) return 1;
+          else if(a.original_time < b.original_time) return -1;
           else return 1;
         });
         /*

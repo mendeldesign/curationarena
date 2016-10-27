@@ -132,7 +132,7 @@ imageService.loadExifDataBulkFolder = function loadExifDataBulkFolder (images, c
     var fs = require("fs");
     fs.mkdir(newPath, function(err) {
       if (err) {
-        if (err.code === "EEXIST") {
+        if (err.code === 'EEXIST') {
           cb0(null);
         } else {
           cb0(err);
@@ -152,18 +152,20 @@ imageService.loadExifDataBulkFolder = function loadExifDataBulkFolder (images, c
     else {
 
       /**
-       * get exif
+       * get exif based on
        * https://github.com/Yvem/node-exif
        * done in series because it calls exiftool via shell command and has to be
        * exif tool: http://www.sno.phy.queensu.ca/~phil/exiftool/
        */
-      var exiftool = require('exif2');
-
-      //load exif data of all the images in the folder
-      context.extractExifData(path, function(err, allExifMetadata){
+      var exiftool = require('../utils/exif2');
+      var exifParams = ['-FileName', '-ImageHeight', '-ImageWidth', '-Rotation',
+        '-Orientation', '-DateTimeOriginal', '-CreateDate', '-ModifyDate',
+        '-OffsetTime', '-FileAccessDate', '-FileType', '-MIMEType', '-fast'];
+      exiftool(path, exifParams,  function(err, allExifMetadata){
+        //load exif data of all the images in the folder
+        //context.extractExifData(path, function(err, allExifMetadata){
         if (!err) {
           logger.verbose('exif data loaded successfully: ' + path);
-          //logger.verbose(allExifMetadata);
           // done in series.
           var every = require('async').everyLimit;
           every(images, 2, function(image, cb1) {
@@ -287,7 +289,7 @@ imageService.loadExifDataPerFile = function loadExifDataPerFile (images, cb){
     var fs = require("fs");
     fs.mkdir(newPath, function(err) {
       if (err) {
-        if (err.code === "EEXIST") {
+        if (err.code === 'EEXIST') {
           cb0(null);
         } else {
           cb0(err);
@@ -312,9 +314,6 @@ imageService.loadExifDataPerFile = function loadExifDataPerFile (images, cb){
        * exif tool: http://www.sno.phy.queensu.ca/~phil/exiftool/
        */
       var exiftool = require('exif2');
-      var exifParams = '-FileName -ImageHeight -ImageWidth -Rotation ' +
-        '-Orientation -DateTimeOriginal -CreateDate -ModifyDate -OffsetTime ' +
-        '-FileAccessDate -FileType -MIMEType';
       // done in series.
       var every = require('async').everyLimit;
       every(images, 2, function(image, cb1) {
@@ -482,7 +481,7 @@ imageService.loadImagesForUser = function loadImagesForUser(user, path, cb) {
   var context = this;
   context.processImageFromDir(user,path, function(err, images){
     if(!err) {
-      context.loadExifDataPerFile(images, function(err, images){
+      context.loadExifDataBulkFolder(images, function(err, images){
         //storedImages = storedImages.concat(images);
         images = images.sort(function(a,b){
           if(a.original_time === null) return -1;

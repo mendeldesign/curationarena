@@ -11,7 +11,7 @@ const THUMBNAIL_HEIGHT = 498;
  * https://www.future-processing.pl/blog/on-problems-with-threads-in-node-js/
  * @type {number}
  */
-process.env.UV_THREADPOOL_SIZE = 16; // This will work
+//process.env.UV_THREADPOOL_SIZE = 16; // This will work
 
 /**
  * USB drives are in var '/Volumes/USB_NAME/folder;
@@ -21,8 +21,8 @@ process.env.UV_THREADPOOL_SIZE = 16; // This will work
 //  "Prototype/curationarena/public/images/photos_A";
 //var pathUserB= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
 //  "Prototype/curationarena/public/images/photos_B";
-var pathUserA = "/Users/Mendel/Desktop/Outliers";
-var pathUserB = "/Users/Mendel/Desktop/Outliers";
+var pathUserA = "/Users/Mendel/Desktop/photos_A";
+var pathUserB = "/Users/Mendel/Desktop/photos_B";
 
 var userFiles = [
   {
@@ -317,7 +317,7 @@ imageService.loadExifDataPerFile = function loadExifDataPerFile (images, cb){
         '-FileAccessDate -FileType -MIMEType';
       // done in series.
       var every = require('async').everyLimit;
-      every(images, 4, function(image, cb1) {
+      every(images, 2, function(image, cb1) {
         exiftool(image.path, null, function(err, exifMetadata){
           if (!err) {
             //logger.verbose('exif data loaded successfully: ' + image.path);

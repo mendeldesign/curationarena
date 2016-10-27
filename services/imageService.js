@@ -3,6 +3,15 @@
  */
 var logger = require('../utils/logFactory').getLogger();
 var imageService = {};
+const THUMBNAIL_HEIGHT = 498;
+
+
+/**
+ * Increase pool size of threads
+ * https://www.future-processing.pl/blog/on-problems-with-threads-in-node-js/
+ * @type {number}
+ */
+process.env.UV_THREADPOOL_SIZE = 16; // This will work
 
 /**
  * USB drives are in var '/Volumes/USB_NAME/folder;
@@ -121,14 +130,16 @@ imageService.loadExifDataBulkFolder = function loadExifDataBulkFolder (images, c
   //function to check that the folder exists
   var prepareNewPath = function prepareNewPath(newPath, cb0){
     var fs = require("fs");
-    fs.access(newPath, function(err) {
-      if(err) {
-        fs.mkdir(newPath, function (err){
-          if(err) cb0(err);
-          else cb0(null);
-        });
+    fs.mkdir(newPath, function(err) {
+      if (err) {
+        if (err.code === "EEXIST") {
+          cb0(null);
+        } else {
+          cb0(err);
+        }
       }
       else cb0(null);
+
     });
   };
 
@@ -234,7 +245,6 @@ imageService.loadExifDataBulkFolder = function loadExifDataBulkFolder (images, c
             image.size = exifMetadata['FileSize'];
 
             //create thumbnail
-            const THUMBNAIL_HEIGHT = 498;
             var thumbnailPath = image.directory + THUMBNAIL_DIRECTORY + THUMBNAIL_NAME + image.name;
             context.createThumbnailFromFile(image.path, thumbnailPath, 0,THUMBNAIL_HEIGHT, 'center', 'middle', function(err, newPathToFile) {
               if(err) {
@@ -275,14 +285,16 @@ imageService.loadExifDataPerFile = function loadExifDataPerFile (images, cb){
   //function to check that the folder exists
   var prepareNewPath = function prepareNewPath(newPath, cb0){
     var fs = require("fs");
-    fs.access(newPath, function(err) {
-      if(err) {
-        fs.mkdir(newPath, function (err){
-          if(err) cb0(err);
-          else cb0(null);
-        });
+    fs.mkdir(newPath, function(err) {
+      if (err) {
+        if (err.code === "EEXIST") {
+          cb0(null);
+        } else {
+          cb0(err);
+        }
       }
       else cb0(null);
+
     });
   };
 
@@ -305,7 +317,7 @@ imageService.loadExifDataPerFile = function loadExifDataPerFile (images, cb){
         '-FileAccessDate -FileType -MIMEType';
       // done in series.
       var every = require('async').everyLimit;
-      every(images, 2, function(image, cb1) {
+      every(images, 4, function(image, cb1) {
         exiftool(image.path, null, function(err, exifMetadata){
           if (!err) {
             //logger.verbose('exif data loaded successfully: ' + image.path);
@@ -382,7 +394,6 @@ imageService.loadExifDataPerFile = function loadExifDataPerFile (images, cb){
             image.size = exifMetadata['FileSize'];
 
             //create thumbnail
-            const THUMBNAIL_HEIGHT = 498;
             var thumbnailPath = image.directory + THUMBNAIL_DIRECTORY + THUMBNAIL_NAME + image.name;
             context.createThumbnailFromFile(image.path, thumbnailPath, 0,THUMBNAIL_HEIGHT, 'center', 'middle', function(err, newPathToFile) {
               if(err) {

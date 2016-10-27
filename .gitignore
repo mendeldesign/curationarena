@@ -2,3 +2,9 @@
 node_modules/winston/test/transports/file-tailrolling-test.js
 
 node_modules/
+
+.DS_Store
+
+public/.DS_Store
+
+public/images/.DS_Store

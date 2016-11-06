@@ -61,8 +61,6 @@ body { background-color: black; margin: 0 0 0 0; }
 .grid-item img {
   display:block;
   vertical-align: middle;
-  max-width: none;
-  max-height: none;
 }
 
 .grid-item--land-small{
@@ -71,7 +69,10 @@ body { background-color: black; margin: 0 0 0 0; }
 }
 
 /*NBNBNB hier gaat nog wat mis, want de >4:3 passen niet lekker als ze geselecteerd zijn;*/
-.grid-item--land-small img { max-width: 100%; max-height: none;}
+/*.grid-item--land-small img { max-width: 100%; max-height: none;}*/
+
+/*Deze class is van de photo, niet van de div, dus moet het niet img zijn*/
+/*.landscape--4-3 { max-width: none; max-height: 100%;}*/
 
 /* ----landscape big ---*/
 .grid-item--land-big { 
@@ -79,14 +80,14 @@ body { background-color: black; margin: 0 0 0 0; }
  	height: 498px;
 }
 
-.grid-item--land-big img { max-width: 100%; max-height: none;}
+/*.grid-item--land-big img { max-width: 100%; max-height: none;}*/
 
 /* ----portrait small ---*/
 .grid-item--port-small { 
 	width: 166px; /*grid row-width/ 2*/
 	height: 249px;/*grid row*/
 }
-.grid-item--port-small img {max-width: none; max-height: 100%;}
+/*.grid-item--port-small img {max-width: none; max-height: 100%;}*/
 
 /* ----portrait big ---*/
 .grid-item--port-big {
@@ -94,38 +95,35 @@ body { background-color: black; margin: 0 0 0 0; }
 	height: 498px; /*grid row x 2*/
 }
 
-.grid-item--port-big img {max-width: none; max-height: 100%;}
+/*.grid-item--port-big img {max-width: none; max-height: 100%;}*/
 
 /* ----panorama ---*/
 .grid-item--pano {
 	width: 498px;/*grid row x 2*/
 	height: 249px;/*grid row*/
 }
-.grid-item--pano img {max-width: none; max-height: 100%;}
+/*.grid-item--pano img {max-width: none; max-height: 100%;}*/
 
 .grid-item--port-pano {
 	width: 249px; /*grid row*/
 	height: 498px; /*grid row x 2*/
 }
-.grid-item--port-pano img {max-height: 100%; max-width: none;}
+/*.grid-item--port-pano img {max-height: 100%; max-width: none;}*/
 
 /* ----square ---*/
 .grid-item--square {
   width: 249px;/*grid row*/
   height: 249px;/*grid row*/
 }
-.grid-item--square img {max-width: 100%; max-height: 100%;}
+/*.grid-item--square img {max-width: 100%; max-height: 100%;}*/
 
 
 /* when selected */
 .item--selected{
-	border: 15px solid #FFF;	
+	border: 20px solid #007399;	
 	/*opacity: 0.4;*/
 }
-/*
-#portrait{ max-height: 100%; }
-#landscape{ max-width: 100%; }
-*/
+
 
 /* 
  * Rotations thanks to https://gist.github.com/mbonaci/9911390
@@ -190,8 +188,8 @@ body { background-color: black; margin: 0 0 0 0; }
 .arena-item--land--small img {
   display:block;
   vertical-align: middle;
-  max-width: 100%;
-  max-height: none;
+/*  max-width: 100%;
+  max-height: none;*/
 }
 
 /* ----landscape big ---*/
@@ -199,14 +197,14 @@ body { background-color: black; margin: 0 0 0 0; }
   width: 1064px; /*grid row-width *2*/
   height: 798px; /*grid row x 2*/ 
 }
-.arena-item--land-big img { max-width: 100%; max-height: none;}
+/*.arena-item--land-big img { max-width: 100%; max-height: none;}*/
 
 /* ----portrait small ---*/
 .arena-item--port-small { 
   width: 266px; /*grid row-width/ 2*/
   height: 399px;/*grid row*/
 }
-.arena-item--port-small img {max-width: none; max-height: 100%;}
+/*.arena-item--port-small img {max-width: none; max-height: 100%;}*/
 
 /* ----portrait big ---*/
 .arena-item--port-big {
@@ -214,25 +212,25 @@ body { background-color: black; margin: 0 0 0 0; }
   height: 798px; /*grid row x 2*/
 }
 
-.arena-item--port-big img {max-width: none; max-height: 100%;}
+/*.arena-item--port-big img {max-width: none; max-height: 100%;}*/
 
 /* ----panorama ---*/
 .arena-item--pano {
   width: 798px;/*grid width x 2*/ 
   height: 399px;/*grid row*/
 }
-.arena-item--pano img {max-width: none; max-height: 100%;}
+/*.arena-item--pano img {max-width: none; max-height: 100%;}*/
 
 .arena-item--port-pano {
   width: 399px; /*grid row*/
   height: 798px; /*grid row x 2*/
 }
-.arena-item--port-pano img {max-height: 100%; max-width: none;}
+/*.arena-item--port-pano img {max-height: 100%; max-width: none;}*/
 
 /* ----square ---*/
 .arena-item--square {
   width: 399px;/*grid row*/
   height: 399px;/*grid row*/
 }
-.arena-item--square img {max-width: 100%; max-height: 100%;}
+/*.arena-item--square img {max-width: 100%; max-height: 100%;}*/
 

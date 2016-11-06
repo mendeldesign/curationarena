@@ -121,8 +121,8 @@ function getImageDiv(w,h,o, callback){
 			params = {width: "532px", height: "", imageClass: "arena-item--land-small", imageOrientation: "landscape"};
 			break;
 		//for photos with an aspect ratio bigger than 4:3 (all DSLR)
-		case "landscape 4-3":
-			params = getRandomDiv("landscape 4-3");
+		case "landscape--4-3":
+			params = getRandomDiv("landscape--4-3");
 			break;
 		//all other landscape photos
 		case "landscape":
@@ -149,7 +149,7 @@ function getRandomDiv(o) {
 	//console.log(randomInt);
 	switch(o){
 		case "portrait":
-			if(randomInt <= 50){
+			if(randomInt <= 10){
 				return ({width: "", height: "798px", imageClass: "arena-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
@@ -158,7 +158,7 @@ function getRandomDiv(o) {
 			break;
 		case "portrait_w-h-flip":
 			//NB w and h are the other way around!
-			if(randomInt <= 50){
+			if(randomInt <= 10){
 				return ({width: "", height: "532px", imageClass: "arena-item--port-big", imageOrientation: "portrait"});
 			}
 			else{
@@ -166,15 +166,15 @@ function getRandomDiv(o) {
 			}
 			break;
 		case "landscape":
-			if(randomInt <= 50){
+			if(randomInt <= 10){
 			return ({width: "1064px", height: "", imageClass: "arena-item--land-big", imageOrientation: "landscape"});
 			}
 			else{
 				return ({width: "532px", height: "", imageClass: "arena-item--land-small", imageOrientation: "landscape"});
 			}
 			break;
-		case "landscape 4-3":
-			if(randomInt <= 50){
+		case "landscape--4-3":
+			if(randomInt <= 10){
 			return ({width: "", height: "798", imageClass: "arena-item--land-big", imageOrientation: "landscape"});
 			}
 			else{

@@ -171,8 +171,8 @@ function getImageDiv(w,h,o, callback){
 				else{
 					//landscape photos with a ratio smaller than 4:3
 					if(w > (1.4 * h)){
-						console.log("landscape 4-3 should apply");
-						params = {width: "", height: "249px", imageClass: "grid-item--land-small", imageOrientation: "landscape 4-3"};
+						console.log("landscape--4-3 should apply");
+						params = {width: "", height: "249px", imageClass: "grid-item--land-small", imageOrientation: "landscape--4-3"};
 					}
 					//all other landscape photos
 					else{

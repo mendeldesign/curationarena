@@ -284,14 +284,7 @@ imageService.loadExifDataBulkFolder = function loadExifDataBulkFolder (images, c
                   logger.error(err1);
                   cb1(null, true); // to continue with other files
                 }
-              } else {
-                // Just in case it doesn't exist? Do something
-                logger.verbose("thumbnail for " +image.name+ " exists already");
-                image.thumbnail_url = "/files/" + image.user + "/images/" + encodeURIComponent(thumbnailPath);
-                image.thumbnail_path = thumbnailPath;
-                imagesWithExif.push(image);
-                cb1(null, true);
-              }
+              } 
             });
 
           }, function(err, result){

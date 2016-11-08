@@ -21,9 +21,9 @@ const THUMBNAIL_HEIGHT = 498;
 //  "Prototype/curationarena/public/images/photos_A";
 //var pathUserB= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
 //  "Prototype/curationarena/public/images/photos_B";
-var pathUserA = "/Users/Mendel/Desktop/photos_A-Test";
+var pathUserA = "/Users/Mendel/Desktop/MM-Demo";
 //var pathUserB = "/Users/Mendel/Desktop/photos_B";
-var pathUserB = "/Users/Mendel/Desktop/photos_A-Test";
+var pathUserB = "/Users/Mendel/Desktop/MM-Demo";
 
 var userFiles = [
   {
@@ -251,40 +251,32 @@ imageService.loadExifDataBulkFolder = function loadExifDataBulkFolder (images, c
             var thumbnailPath = image.directory + THUMBNAIL_DIRECTORY + THUMBNAIL_NAME + image.name;
             var fs = require("fs");
             //[MJB] if the thumbnail already exists, it should not overwrite
-            fs.open(thumbnailPath, 'wx', function(err1, fd) {
-              if (err1) {
-                if (err1.code === "ENOENT") {
-                  // create the thumbnail
-                  context.createThumbnailFromFile(image.path, thumbnailPath, 0,THUMBNAIL_HEIGHT, 'center', 'middle', function(err, newPathToFile) {
-                    if(err) {
-                      logger.error(err1);
-                      cb1(null, true); // to continue with other files
-                    }
-                    else {
-                      image.thumbnail_url = "/files/" + image.user + "/images/" + encodeURIComponent(newPathToFile);
-                      image.thumbnail_path = newPathToFile;
-                      imagesWithExif.push(image);
-                      logger.debug('Loading images ' + image.user + ' : '
-                        + imagesWithExif.length + '/' + images.length);
-                      cb1(null, true);
-                    }
-                  });
-                }
-                else if ( err1.code === 'EEXIST') {
-                  // it exists then Do something
-                  logger.verbose("thumbnail for " +image.name+ " exists" +
-                    " already");
-                  image.thumbnail_url = "/files/" + image.user + "/images/" + encodeURIComponent(thumbnailPath);
-                  image.thumbnail_path = thumbnailPath;
-                  imagesWithExif.push(image);
-                  cb1(null, true);
-                }
-                else {
-                  // error while reading
-                  logger.error(err1);
-                  cb1(null, true); // to continue with other files
-                }
-              } 
+            fs.exists(thumbnailPath, function(exists) {
+              if (exists) {
+                // Do something
+                console.log("thumbnail for " +image.name+ " exists already");
+                image.thumbnail_url = "/files/" + image.user + "/images/" + encodeURIComponent(thumbnailPath);
+                image.thumbnail_path = thumbnailPath;
+                imagesWithExif.push(image);
+                cb1(null, true);
+              }
+              //else create the thumbnail
+              else{
+                context.createThumbnailFromFile(image.path, thumbnailPath, 0,THUMBNAIL_HEIGHT, 'center', 'middle', function(err, newPathToFile) {
+                  if(err) {
+                    logger.error(err);
+                    cb1(null, true); // to continue with other files
+                  }
+                  else {
+                    image.thumbnail_url = "/files/" + image.user + "/images/" + encodeURIComponent(newPathToFile);
+                    image.thumbnail_path = newPathToFile;
+                    imagesWithExif.push(image);
+                    logger.debug('Loading images ' + image.user + ' : '
+                      + imagesWithExif.length + '/' + images.length);
+                    cb1(null, true);
+                  }
+                });
+              }
             });
 
           }, function(err, result){

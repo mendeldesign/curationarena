@@ -21,9 +21,9 @@ const THUMBNAIL_HEIGHT = 498;
 //  "Prototype/curationarena/public/images/photos_A";
 //var pathUserB= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
 //  "Prototype/curationarena/public/images/photos_B";
-var pathUserA = "/Users/Mendel/Desktop/MM-Demo";
+var pathUserA = "./public/ExamplePhotos/photos_A-Test";
 //var pathUserB = "/Users/Mendel/Desktop/photos_B";
-var pathUserB = "/Users/Mendel/Desktop/MM-Demo";
+var pathUserB = "./public/ExamplePhotos/photos_B-Test";
 
 var userFiles = [
   {

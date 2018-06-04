@@ -4,6 +4,9 @@
 
 This was part of a [Materialising Memories][1] project into the curation of personal photos and interpersonal storytelling. It was developed to be run in the [UTS Data Arena][2], a large-scale 360º display.
 
+Design: Mendel Broekhuijsen
+Coding: Mendel Broekhuijsen & Jesus Muñoz Alcantara, Eindhoven University of Technology
+
 ## Installation
 - Clone or download this repository
 - Install [exiftool][3]
@@ -30,6 +33,10 @@ iPad’s (of andere tablets met eenzelfde resolutie scherm) moeten naar [http://
 Als je een foto selecteert op de iPad verschijnt hij op het scherm van de arena, en krijgt de foto op de tablet een blauwe rand. bij het de-selecteren verdwijnt de foto van het arena scherm. That’s it!
 
 To stop the webserver, use `^c (ctrl+c)`, or close the terminal window.
+
+## Adding photos
+
+At the moment, two users can show, browse, and tell at the same time. Their photos are located in two folder in `public/ExamplePhotos`. Photos go in respectively the `A` and `B` folders for each user.
 
 [1]:	http://www.materialisingmemories.com/
 [2]:	https://www.uts.edu.au/partners-and-community/data-arena/overview

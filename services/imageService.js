@@ -541,7 +541,7 @@ imageService.createThumbnailFromFile = function createThumbnailFromFile (pathToF
    * https://github.com/EyalAr/lwip
    * @type {*}
    */
-  var lwip = require('lwip');
+  var lwip = require('pajk-lwip'); // using a slightly different version from the regular lwip package so it compiles with node 8+
   lwip.open(pathToFile, function (err, image) {
     if (err || !image) {
       return cb(err);

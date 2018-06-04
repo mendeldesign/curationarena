@@ -63,6 +63,8 @@ router.get('/:user/images/:file', urlencodedParser, function(req, res, next) {
   var file = req.params.file;
   var user = req.params.user;
   imageService.getImage(user, file, function (err, pathToFile){
+    // make sure the path is an absolute reference to the file
+    pathToFile = __dirname.replace('/routes','') + pathToFile.replace('./','/');
     res.sendFile(pathToFile);
   });
 });

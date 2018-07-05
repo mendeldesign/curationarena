@@ -8,13 +8,18 @@
 /* inherit height from window */
 html, body { height: 100%; }
 
-body { background-color: black; margin: 0 0 0 0; }
+body {
+  background-color: black;
+  background-image: url('/images/multi-user-screen-large.png');
+  background-repeat: repeat;
+  margin: 0 0 0 0;
+}
 
 
 /* ---- grid ---- */
 
 .grid {
-  background: black;
+  /*background: black;*/
   height: 100%; /* inherit height from body */
 }
 

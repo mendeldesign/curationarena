@@ -17,12 +17,7 @@ const THUMBNAIL_HEIGHT = 498;
  * USB drives are in var '/Volumes/USB_NAME/folder;
  * @type {string}
  */
-//var pathUserA = "/Users/jmunoza/odrive/Dropbox/Curation\ " +
-//  "Prototype/curationarena/public/images/photos_A";
-//var pathUserB= "/Users/jmunoza/odrive/Dropbox/Curation\ " +
-//  "Prototype/curationarena/public/images/photos_B";
 var pathUserA = "./public/ExamplePhotos/photos_A-Test";
-//var pathUserB = "/Users/Mendel/Desktop/photos_B";
 var pathUserB = "./public/ExamplePhotos/photos_B-Test";
 
 var userFiles = [
@@ -541,7 +536,7 @@ imageService.createThumbnailFromFile = function createThumbnailFromFile (pathToF
    * https://github.com/EyalAr/lwip
    * @type {*}
    */
-  var lwip = require('lwip');
+  var lwip = require('pajk-lwip'); // using a slightly different version from the regular lwip package so it compiles with node 8+
   lwip.open(pathToFile, function (err, image) {
     if (err || !image) {
       return cb(err);

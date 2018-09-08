@@ -7,4 +7,6 @@ node_modules/
 
 public/.DS_Store
 
+public/ExamplePhotos/
 public/images/.DS_Store
+.DS_Store

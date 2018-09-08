@@ -220,9 +220,16 @@ console.log(addItem +" "+url);
 		var $photoItem = $grid.children([0]).find("[src='" + url + "']");
 		console.log($photoItem);
 		
-		$( $photoItem.parent([0])).remove();
-		//re-layout
-	 	$grid.isotope(); 
+		// use the old method (true; more static) or reflow after removal (false)
+		if (false) {
+			$( $photoItem.parent([0])).remove();
+			//re-layout
+	 		$grid.isotope();
+		} else {
+			var removableDiv = $( $photoItem.parent([0]));
+			//re-layout
+	 		$grid.isotope('remove', removableDiv).isotope('layout'); 
+		}
 	}
 });
 
